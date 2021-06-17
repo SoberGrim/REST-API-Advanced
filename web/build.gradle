@@ -1,0 +1,17 @@
+plugins {
+    id 'war'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.3'
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.3'
+    implementation project(':repository')
+    implementation project(':service')
+}

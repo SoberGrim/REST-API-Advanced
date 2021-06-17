@@ -1,0 +1,9 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.3'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    implementation project(':repository')
+}

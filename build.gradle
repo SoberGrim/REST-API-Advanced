@@ -1,0 +1,25 @@
+subprojects {
+    apply plugin: 'java'
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    repositories {
+        mavenCentral()
+    }
+
+    group 'com.epam.ems'
+    version '1.0'
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+        implementation group: 'org.springframework', name: 'spring-context', version: '5.3.3'
+        implementation group: 'org.springframework', name: 'spring-core', version: '5.3.3'
+        implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.3'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
