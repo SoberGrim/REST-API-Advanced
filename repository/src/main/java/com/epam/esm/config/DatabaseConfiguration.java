@@ -14,7 +14,7 @@ import java.util.Properties;
 /**
  * The type Database configuration.
  */
-@Configuration
+ @Configuration
 public class DatabaseConfiguration {
     private static final String DATABASE_PROPERTY_FILE_PATH = "/property/database.properties";
     private static final String DATABASE_DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
