@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SqlGiftCertificateQueryCreatorTest {
     private final SqlQueryCreator queryCreator = new SqlGiftCertificateQueryCreator();
-    private final List<Criteria> criteriaList = new ArrayList<>();
 
     @Test
     public void createQueryTest1() {
@@ -21,6 +20,7 @@ public class SqlGiftCertificateQueryCreatorTest {
                 " last_update_date, tag_id, tag_name FROM gift_certificates RIGHT JOIN gift_certificates_tags ON" +
                 " gift_certificate_id = gift_certificate_id_fk LEFT JOIN tags ON tag_id = tag_id_fk WHERE" +
                 " LOWER(description) LIKE '%value%';";
+        List<Criteria> criteriaList = new ArrayList<>();
         criteriaList.add(new PartMatchSearchCriteria(SqlGiftCertificateColumnName.DESCRIPTION, "value"));
         String actual = queryCreator.createQuery(criteriaList);
         assertEquals(expected, actual);
@@ -32,6 +32,7 @@ public class SqlGiftCertificateQueryCreatorTest {
                 " last_update_date, tag_id, tag_name FROM gift_certificates RIGHT JOIN gift_certificates_tags ON" +
                 " gift_certificate_id = gift_certificate_id_fk LEFT JOIN tags ON tag_id = tag_id_fk WHERE" +
                 " LOWER(description) LIKE '%value%' ORDER BY create_date asc;";
+        List<Criteria> criteriaList = new ArrayList<>();
         criteriaList.add(new PartMatchSearchCriteria(SqlGiftCertificateColumnName.DESCRIPTION, "value"));
         criteriaList.add(new FieldSortCriteria(SqlGiftCertificateColumnName.CREATE_DATE, "asc"));
         String actual = queryCreator.createQuery(criteriaList);
