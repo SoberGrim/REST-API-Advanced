@@ -8,58 +8,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Tag dao.
- */
 @Repository
 public class TagDaoImpl implements TagDao<Tag> {
-    private final JdbcTemplate template;
-    private final TagMapper mapper;
+    private final EntityManager em;
 
-    /**
-     * Instantiates a new Tag dao.
-     *
-     * @param dataSource the data source
-     * @param mapper     the mapper
-     */
     @Autowired
-    public TagDaoImpl(DataSource dataSource, TagMapper mapper) {
-        this.template = new JdbcTemplate(dataSource);
-        this.mapper = mapper;
+    public TagDaoImpl(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public boolean insert(Tag tag) {
-        return template.update(SqlTagQuery.SQL_INSERT_TAG, tag.getName()) == 1;
+        return true;
     }
 
     @Override
     public Optional<Tag> findById(long id) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAG_BY_ID, mapper, new Object[]{id}).stream()
-                .findAny();
+        return Optional.ofNullable(em.find(Tag.class, id));
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAG_BY_NAME, mapper, new Object[]{name}).stream().findAny();
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> tagCriteria = criteriaBuilder.createQuery(Tag.class);
+        Root<Tag> tagRoot = tagCriteria.from(Tag.class);
+        tagCriteria.where(criteriaBuilder.equal(tagRoot.get("name"), name));
+        return Optional.ofNullable(em.createQuery(tagCriteria).getSingleResult());
     }
 
     @Override
     public List<Tag> findAll() {
-        return template.query(SqlTagQuery.SQL_SELECT_ALL_TAGS, mapper);
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> tagCriteria = criteriaBuilder.createQuery(Tag.class);
+        Root<Tag> tagRoot = tagCriteria.from(Tag.class);
+        tagCriteria.select(tagRoot);
+        return em.createQuery(tagCriteria).getResultList();
     }
 
     @Override
     public List<Tag> findTagsConnectedToCertificate(long id) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAGS_CONNECTED_WITH_CERTIFICATE, mapper, id);
+        return null;
     }
 
     @Override
     public boolean delete(long id) {
-        return template.update(SqlTagQuery.SQL_DELETE_TAG_BY_ID, id) == 1;
+        return true;
     }
 }
