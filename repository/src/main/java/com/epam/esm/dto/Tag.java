@@ -1,8 +1,10 @@
 package com.epam.esm.dto;
 
 
+import com.epam.esm.dto.audit.AuditListener;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +13,20 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"id"})
-@ToString
+@ToString(exclude = {"id"})
+@EntityListeners(AuditListener.class)
 @Entity
 @Table(name = "tags")
 public class Tag {
