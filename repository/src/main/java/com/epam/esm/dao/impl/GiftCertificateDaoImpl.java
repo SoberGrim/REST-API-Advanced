@@ -21,22 +21,12 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Gift certificate dao.
- */
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificate> {
     private final JdbcTemplate template;
     private final GiftCertificateMapper mapper;
     private final SqlQueryCreator queryCreator;
 
-    /**
-     * Instantiates a new Gift certificate dao.
-     *
-     * @param dataSource   the data source
-     * @param mapper       the mapper
-     * @param queryCreator the query creator
-     */
     @Autowired
     public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper mapper, SqlQueryCreator queryCreator) {
         this.template = new JdbcTemplate(dataSource);
@@ -61,7 +51,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
             return (giftCertificate.getTags() == null || giftCertificate.getTags().isEmpty() ||
                     connectTags(giftCertificate.getTags(), keyHolder.getKey().longValue()));
         } else {
-            throw new DaoException("1", "Generated key is null for gift certificate: " + giftCertificate);
+            throw new DaoException("1", "error.generatedKeyIsNull", giftCertificate.toString());
         }
     }
 
