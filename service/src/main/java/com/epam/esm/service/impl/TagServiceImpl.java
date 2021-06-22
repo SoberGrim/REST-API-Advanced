@@ -13,18 +13,10 @@ import java.util.List;
 
 import static com.epam.esm.validator.TagValidator.isNameValid;
 
-/**
- * The type Tag service.
- */
 @Service
 public class TagServiceImpl implements TagService<Tag> {
     private final TagDao<Tag> dao;
 
-    /**
-     * Instantiates a new Tag service.
-     *
-     * @param dao the dao
-     */
     @Autowired
     public TagServiceImpl(TagDao<Tag> dao) {
         this.dao = dao;
@@ -33,7 +25,8 @@ public class TagServiceImpl implements TagService<Tag> {
     @Override
     public boolean insert(Tag tag) {
         if (!isNameValid(tag.getName())) {
-            throw new InvalidFieldException("2", "Invalid tag name (name = " + tag.getName() + ")");
+            // TODO: 6/22/2021 Create constant for error.invalid.tagId
+            throw new InvalidFieldException("2", "error.invalid.tagId", tag.getName());
         }
         if (dao.findByName(tag.getName()).isPresent()) {
             throw new ResourceDuplicateException("2", "Tag already exists (name = " + tag.getName() + ")");
@@ -47,7 +40,7 @@ public class TagServiceImpl implements TagService<Tag> {
             return dao.findById(Long.parseLong(id)).orElseThrow(() -> new ResourceNotFoundException("2", "Requested" +
                     " resource not found (id = " + id + ")"));
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("2", "Invalid tag id (id = " + id + ")");
+            throw new InvalidFieldException("2", "error.invalid.tagId", id);
         }
     }
 
@@ -57,7 +50,7 @@ public class TagServiceImpl implements TagService<Tag> {
             return dao.findByName(name).orElseThrow(() -> new ResourceNotFoundException("2", "Requested" +
                     " resource not found (name = " + name + ")"));
         } else {
-            throw new InvalidFieldException("2", "Invalid tag name (name = " + name + ")");
+            throw new InvalidFieldException("2", "error.invalid.tagId", name);
         }
     }
 
@@ -71,7 +64,7 @@ public class TagServiceImpl implements TagService<Tag> {
         try {
             return dao.findTagsConnectedToCertificate(Long.parseLong(certificateId));
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("2", "Invalid certificate id (id = " + certificateId + ")");
+            throw new InvalidFieldException("2", "error.invalid.tagId", certificateId);
         }
     }
 
@@ -80,7 +73,7 @@ public class TagServiceImpl implements TagService<Tag> {
         try {
             return dao.delete(Long.parseLong(id));
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("2", "Invalid tag id (id = " + id + ")");
+            throw new InvalidFieldException("2", "error.invalid.tagId", id);
         }
     }
 }

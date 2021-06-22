@@ -1,52 +1,44 @@
 package com.epam.esm.exception;
 
-/**
- * The type Invalid field exception.
- */
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class InvalidFieldException extends RuntimeException {
     private String errorCode;
-    private String message;
+    private String messageKey;
+    private String detail;
 
-    /**
-     * Instantiates a new Invalid field exception.
-     *
-     * @param errorCode the error code
-     * @param message   the message
-     */
-    public InvalidFieldException(String errorCode, String message) {
+    public InvalidFieldException(String errorCode, String messageKey, String detail) {
         this.errorCode = errorCode;
-        this.message = message;
+        this.messageKey = messageKey;
+        this.detail = detail;
     }
 
-    /**
-     * Gets error code.
-     *
-     * @return the error code
-     */
     public String getErrorCode() {
         return errorCode;
     }
 
-    /**
-     * Sets error code.
-     *
-     * @param errorCode the error code
-     */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
-    @Override
-    public String getMessage() {
-        return message;
+    public String getMessageKey() {
+        return messageKey;
     }
 
-    /**
-     * Sets message.
-     *
-     * @param message the message
-     */
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getLocalizedMessage(Locale locale) {
+        return ResourceBundle.getBundle("error_messages", locale).getString(messageKey);
     }
 }

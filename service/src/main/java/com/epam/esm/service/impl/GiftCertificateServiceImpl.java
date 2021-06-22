@@ -66,7 +66,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             }
             return dao.insert(giftCertificate);
         } else {
-            throw new InvalidFieldException("1", "Invalid gift certificate: " + giftCertificate);
+            throw new InvalidFieldException("1", "error.invalid.giftСertificate", giftCertificate.toString());
         }
     }
 
@@ -85,7 +85,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                 throw new ResourceNotFoundException("1", "Requested resource not found (id = " + id + ")");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "Invalid tag id (id = " + id + ")");
+            throw new InvalidFieldException("1", "error.invalid.tagId", id);
         }
     }
 
@@ -105,10 +105,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                 dao.connectTags(notConnectedTags, oldGiftCertificate.getId());
                 return dao.update(oldGiftCertificate);
             } else {
-                throw new InvalidFieldException("1", "Invalid gift certificate: " + newGiftCertificate);
+                throw new InvalidFieldException("1", "error.invalid.giftСertificate", newGiftCertificate.toString());
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "Invalid tag id (id = " + id + ")");
+            throw new InvalidFieldException("1", "error.invalid.tagId", id);
         }
     }
 
@@ -118,7 +118,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             return dao.findById(Long.parseLong(id)).orElseThrow(() -> new ResourceNotFoundException("1", "Requested" +
                     " resource not found (id = " + id + ")"));
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "Invalid tag id (id = " + id + ")");
+            throw new InvalidFieldException("1", "error.invalid.tagId", id);
         }
     }
 
