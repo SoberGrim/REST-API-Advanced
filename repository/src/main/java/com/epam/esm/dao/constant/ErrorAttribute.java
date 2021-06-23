@@ -1,7 +1,7 @@
 package com.epam.esm.dao.constant;
 
 public class ErrorAttribute {
-    public static final String PROPERTY_FILE_NAME = "error_messages";
+    public static final String PROPERTY_FILE_NAME = "locale/error_messages";
     public static final String GIFT_CERTIFICATE_ERROR_CODE = "1";
     public static final String INVALID_GIFT_CERTIFICATE_ERROR = "error.invalidGiftCertificate";
     public static final String INVALID_GIFT_CERTIFICATE_ID_ERROR = "error.invalidGiftCertificateId";
