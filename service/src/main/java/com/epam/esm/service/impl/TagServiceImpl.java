@@ -74,7 +74,11 @@ public class TagServiceImpl implements TagService<Tag> {
     @Override
     public boolean delete(String id) {
         try {
-            return dao.delete(Long.parseLong(id));
+            if (!dao.delete(Long.parseLong(id))) {
+                throw new ResourceNotFoundException(ErrorAttribute.TAG_ERROR_CODE,
+                        ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id);
+            }
+            return true;
         } catch (NumberFormatException e) {
             throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_ID_ERROR, id);
         }
