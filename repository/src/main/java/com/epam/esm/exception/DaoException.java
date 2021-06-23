@@ -1,5 +1,7 @@
 package com.epam.esm.exception;
 
+import com.epam.esm.dao.constant.ErrorAttribute;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -39,6 +41,6 @@ public class DaoException extends RuntimeException {
     }
 
     public String getLocalizedMessage(Locale locale) {
-        return ResourceBundle.getBundle("error_messages", locale).getString(messageKey);
+        return ResourceBundle.getBundle(ErrorAttribute.PROPERTY_FILE_NAME, locale).getString(messageKey);
     }
 }
