@@ -1,5 +1,6 @@
 package com.epam.esm.handler;
 
+import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.exception.ExceptionResponse;
 import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.util.ExceptionMessageLocale;
@@ -10,13 +11,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class InvalidFieldExceptionHandler {
-    private static final String SPACE_SYMBOL = " ";
     private final HttpStatus status = HttpStatus.BAD_REQUEST;
 
     @ExceptionHandler(InvalidFieldException.class)
     public final ResponseEntity<ExceptionResponse> handleRuntimeExceptions(InvalidFieldException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getLocalizedMessage(
-                ExceptionMessageLocale.getCurrent()) + SPACE_SYMBOL + e.getDetail(), e.getErrorCode());
+                ExceptionMessageLocale.getCurrent()) + Symbol.SPACE_SYMBOL + e.getDetail(), e.getErrorCode());
         exceptionResponse.setErrorCode(status.value() + e.getErrorCode());
         return new ResponseEntity<>(exceptionResponse, status);
     }
