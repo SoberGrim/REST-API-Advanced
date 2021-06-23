@@ -20,47 +20,45 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagController {
     private final TagService<Tag> service;
-    private final ControllerHateoas<Tag> hateoas;
+    private final ControllerHateoas<Tag> tagHateoas;
+    private final ControllerHateoas<OperationResponse> responseHateoas;
 
     @Autowired
-    public TagController(TagService<Tag> service, ControllerHateoas<Tag> hateoas) {
+    public TagController(TagService<Tag> service, ControllerHateoas<Tag> tagHateoas,
+                         ControllerHateoas<OperationResponse> responseHateoas) {
         this.service = service;
-        this.hateoas = hateoas;
+        this.tagHateoas = tagHateoas;
+        this.responseHateoas = responseHateoas;
     }
 
     @GetMapping
     public List<Tag> findAllTags() {
         List<Tag> tags = service.findAll();
-        tags.forEach(hateoas::createHateoas);
+        tags.forEach(tagHateoas::createHateoas);
         return tags;
     }
 
     @GetMapping("/{id}")
     public Tag findTagById(@PathVariable String id) {
         Tag tag = service.findById(id);
-        hateoas.createHateoas(tag);
+        tagHateoas.createHateoas(tag);
         return tag;
     }
 
     @DeleteMapping("/{id}")
     public OperationResponse deleteTag(@PathVariable String id) {
         service.delete(id);
-        return new OperationResponse(OperationResponse.Operation.DELETION,
+        OperationResponse response = new OperationResponse(OperationResponse.Operation.DELETION,
                 OperationResponseAttribute.TAG_DELETE_OPERATION, id);
+        responseHateoas.createHateoas(response);
+        return response;
     }
 
     @PostMapping("/new")
     public OperationResponse createTag(@RequestBody Tag tag) {
-        service.insert(tag);
-        hateoas.createHateoas(tag);
-        return new OperationResponse(OperationResponse.Operation.CREATION,
-                OperationResponseAttribute.TAG_CREATE_OPERATION, tag.toString());
-    }// TODO: 6/23/2021 fix
-
-  /*  @PostMapping("/new")
-    public ResponseEntity<Tag> createTag(@RequestBody Tag tag) {
-        service.insert(tag);
-        hateoas.createHateoas(tag);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tag);
-    }*/
+        OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
+                OperationResponseAttribute.TAG_CREATE_OPERATION, String.valueOf(service.insert(tag)));
+        responseHateoas.createHateoas(response);
+        return response;
+    }
 }
