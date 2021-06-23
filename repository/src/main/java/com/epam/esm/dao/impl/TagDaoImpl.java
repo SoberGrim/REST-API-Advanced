@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -28,32 +29,40 @@ public class TagDaoImpl implements TagDao<Tag> {
         em.getTransaction().begin();
         em.persist(tag);
         em.getTransaction().commit();
-        return true;
+        em.close();
+        return true;  // FIXME: 6/23/2021 replace function type boolean with void
     }
 
     @Override
     public Optional<Tag> findById(long id) {
-        return Optional.ofNullable(factory.createEntityManager().find(Tag.class, id));
+        EntityManager em = factory.createEntityManager();
+        Optional<Tag> result = Optional.ofNullable(em.find(Tag.class, id));
+        em.close();
+        return result;
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
         EntityManager em = factory.createEntityManager();
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Tag> tagCriteria = criteriaBuilder.createQuery(Tag.class);
-        Root<Tag> tagRoot = tagCriteria.from(Tag.class);
-        tagCriteria.where(criteriaBuilder.equal(tagRoot.get("name"), name));
-        return em.createQuery(tagCriteria).getResultStream().findAny();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.where(builder.equal(root.get("name"), name));
+        Optional<Tag> result = em.createQuery(criteria).getResultStream().findAny();
+        em.close();
+        return result;
     }
 
     @Override
     public List<Tag> findAll() {
         EntityManager em = factory.createEntityManager();
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<Tag> tagCriteria = criteriaBuilder.createQuery(Tag.class);
-        Root<Tag> tagRoot = tagCriteria.from(Tag.class);
-        tagCriteria.select(tagRoot);
-        return em.createQuery(tagCriteria).getResultList();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.select(root);
+        List<Tag> tags = em.createQuery(criteria).getResultList();
+        em.close();
+        return tags;
     }
 
     @Override
@@ -65,9 +74,12 @@ public class TagDaoImpl implements TagDao<Tag> {
     public boolean delete(long id) {
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
-        Tag tag = findById(id).get();
-        em.remove(em.contains(tag)? tag : em.merge(tag));
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Tag> criteria = builder.createCriteriaDelete(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.where(builder.equal(root.get("id"), id));
+        boolean result = em.createQuery(criteria).executeUpdate() == 1;
         em.getTransaction().commit();
-        return true;
+        return result;
     }
 }
