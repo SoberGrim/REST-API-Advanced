@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagDao<T extends Tag> {
-    boolean insert(T t);
+    long insert(T t);
 
     Optional<T> findById(long id);
 

@@ -24,13 +24,13 @@ public class TagDaoImpl implements TagDao<Tag> {
     }
 
     @Override
-    public boolean insert(Tag tag) {
+    public long insert(Tag tag) {
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(tag);
         em.getTransaction().commit();
         em.close();
-        return true;  // FIXME: 6/23/2021 replace function type boolean with void
+        return tag.getId();
     }
 
     @Override
