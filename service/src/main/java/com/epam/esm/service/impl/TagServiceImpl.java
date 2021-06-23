@@ -24,7 +24,7 @@ public class TagServiceImpl implements TagService<Tag> {
     }
 
     @Override
-    public boolean insert(Tag tag) {
+    public long insert(Tag tag) {
         if (!isNameValid(tag.getName())) {
             throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_ID_ERROR,
                     tag.getName());

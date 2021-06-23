@@ -160,7 +160,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     private boolean saveNewTags(GiftCertificate giftCertificate, List<Tag> existingTags) {
         return giftCertificate.getTags().stream()
                 .filter(t -> !existingTags.contains(t))
-                .allMatch(tagService::insert);
+                .allMatch(t -> tagService.insert(t) != 0); // FIXME: 6/24/2021 insert tag returns long NOT boolean
     }
 
     private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {
