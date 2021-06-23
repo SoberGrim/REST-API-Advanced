@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.constant.ErrorAttribute;
 import com.epam.esm.dao.constant.SqlGiftCertificateColumnName;
 import com.epam.esm.dao.constant.SqlTagColumnName;
 import com.epam.esm.dao.creator.criteria.Criteria;
@@ -32,9 +33,6 @@ import static com.epam.esm.validator.GiftCertificateValidator.isGiftCertificateC
 import static com.epam.esm.validator.GiftCertificateValidator.isNameValid;
 import static com.epam.esm.validator.GiftCertificateValidator.isPriceValid;
 
-/**
- * The type Gift certificate service.
- */
 @Service
 public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCertificate> {
     private static final String ASC_SORT_ORDERING = "ASC";
@@ -42,12 +40,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     private final GiftCertificateDao<GiftCertificate> dao;
     private final TagService<Tag> tagService;
 
-    /**
-     * Instantiates a new Gift certificate service.
-     *
-     * @param dao        the dao
-     * @param tagService the tag service
-     */
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDao<GiftCertificate> dao, TagService<Tag> tagService) {
         this.dao = dao;
@@ -66,7 +58,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             }
             return dao.insert(giftCertificate);
         } else {
-            throw new InvalidFieldException("1", "error.invalid.giftСertificate", giftCertificate.toString());
+            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, giftCertificate.toString());
         }
     }
 
@@ -82,43 +75,53 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                 }
                 return dao.delete(giftCertificate.getId());
             } else {
-                throw new ResourceNotFoundException("1", "Requested resource not found (id = " + id + ")");
+                throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                        ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id);
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "error.invalid.tagId", id);
+            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
     }
 
     @Transactional
     @Override
-    public boolean update(String id, GiftCertificate newGiftCertificate) {
+    public boolean update(String id, GiftCertificate newCertificate) {
         try {
-            GiftCertificate oldGiftCertificate = dao.findById(Long.parseLong(id)).orElseThrow(() ->
-                    new ResourceNotFoundException("1", "Requested resource not found (id = " + id + ")"));
-            if (updateGiftCertificateFields(oldGiftCertificate, newGiftCertificate) &&
-                    saveNewTags(oldGiftCertificate, tagService.findAll())) {
-                oldGiftCertificate.setLastUpdateDate(LocalDateTime.now());
+            GiftCertificate oldCertificate = dao.findById(Long.parseLong(id)).orElseThrow(() ->
+                    new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                            ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
+
+            if (updateCertificateFields(oldCertificate, newCertificate) && saveNewTags(oldCertificate,
+                    tagService.findAll())) {
+                oldCertificate.setLastUpdateDate(LocalDateTime.now());
+
                 List<Tag> connectedTags = tagService.findTagsConnectedToCertificate(id);
+
                 List<Tag> notConnectedTags = tagService.findAll().stream()
-                        .filter(t -> !connectedTags.contains(t) && oldGiftCertificate.getTags().contains(t))
+                        .filter(t -> !connectedTags.contains(t) && oldCertificate.getTags().contains(t))
                         .collect(Collectors.toList());
-                dao.connectTags(notConnectedTags, oldGiftCertificate.getId());
-                return dao.update(oldGiftCertificate);
+
+                dao.connectTags(notConnectedTags, oldCertificate.getId());
+                return dao.update(oldCertificate);
             } else {
-                throw new InvalidFieldException("1", "error.invalid.giftСertificate", newGiftCertificate.toString());
+                throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                        ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, newCertificate.toString());
             }
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "error.invalid.tagId", id);
+            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
     }
 
     @Override
     public GiftCertificate findById(String id) {
         try {
-            return dao.findById(Long.parseLong(id)).orElseThrow(() -> new ResourceNotFoundException("1", "Requested" +
-                    " resource not found (id = " + id + ")"));
+            return dao.findById(Long.parseLong(id)).orElseThrow(() -> new ResourceNotFoundException(
+                    ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
         } catch (NumberFormatException e) {
-            throw new InvalidFieldException("1", "error.invalid.tagId", id);
+            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
     }
 
@@ -128,7 +131,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     }
 
     @Override
-    public List<GiftCertificate> findCertificatesWithTagsByCriteria(String tagName, String certificateName, String certificateDescription, String sortByName, String sortByDate) {
+    public List<GiftCertificate> findCertificatesWithTagsByCriteria(String tagName, String certificateName,
+                                                                    String certificateDescription, String sortByName,
+                                                                    String sortByDate) {
         List<Criteria> criteriaList = new ArrayList<>();
         if (TagValidator.isNameValid(tagName)) {
             criteriaList.add(new FullMatchSearchCriteria(SqlTagColumnName.TAG_NAME, tagName));
@@ -158,26 +163,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                 .allMatch(tagService::insert);
     }
 
-    private boolean updateGiftCertificateFields(GiftCertificate oldGiftCertificate, GiftCertificate newGiftCertificate) {
+    private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {
         boolean result = false;
-        if (isNameValid(newGiftCertificate.getName())) {
-            oldGiftCertificate.setName(newGiftCertificate.getName());
+        if (isNameValid(newCertificate.getName())) {
+            oldCertificate.setName(newCertificate.getName());
             result = true;
         }
-        if (isDescriptionValid(newGiftCertificate.getDescription())) {
-            oldGiftCertificate.setDescription(newGiftCertificate.getDescription());
+        if (isDescriptionValid(newCertificate.getDescription())) {
+            oldCertificate.setDescription(newCertificate.getDescription());
             result = true;
         }
-        if (isPriceValid(newGiftCertificate.getPrice())) {
-            oldGiftCertificate.setPrice(newGiftCertificate.getPrice());
+        if (isPriceValid(newCertificate.getPrice())) {
+            oldCertificate.setPrice(newCertificate.getPrice());
             result = true;
         }
-        if (isDurationValid(newGiftCertificate.getDuration())) {
-            oldGiftCertificate.setDuration(newGiftCertificate.getDuration());
+        if (isDurationValid(newCertificate.getDuration())) {
+            oldCertificate.setDuration(newCertificate.getDuration());
             result = true;
         }
-        if (areGiftCertificateTagsValid(newGiftCertificate.getTags())) {
-            oldGiftCertificate.setTags(newGiftCertificate.getTags());
+        if (areGiftCertificateTagsValid(newCertificate.getTags())) {
+            oldCertificate.setTags(newCertificate.getTags());
             result = true;
         }
         return result;
