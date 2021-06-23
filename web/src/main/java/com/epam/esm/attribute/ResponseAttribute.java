@@ -1,6 +1,6 @@
 package com.epam.esm.attribute;
 
-public class OperationResponseAttribute {
+public class ResponseAttribute {
     public static final String PROPERTY_FILE_NAME = "locale/operation_response_messages";
     public static final String LOCALE_CHANGE_OPERATION = "operation.localeChanging";
     public static final String TAG_DELETE_OPERATION = "operation.tagDeletion";

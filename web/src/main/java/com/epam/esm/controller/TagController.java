@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.attribute.OperationResponseAttribute;
+import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.dto.Tag;
 import com.epam.esm.hateoas.ControllerHateoas;
 import com.epam.esm.response.OperationResponse;
@@ -49,7 +49,7 @@ public class TagController {
     public OperationResponse deleteTag(@PathVariable String id) {
         service.delete(id);
         OperationResponse response = new OperationResponse(OperationResponse.Operation.DELETION,
-                OperationResponseAttribute.TAG_DELETE_OPERATION, id);
+                ResponseAttribute.TAG_DELETE_OPERATION, id);
         responseHateoas.createHateoas(response);
         return response;
     }
@@ -57,7 +57,7 @@ public class TagController {
     @PostMapping("/new")
     public OperationResponse createTag(@RequestBody Tag tag) {
         OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
-                OperationResponseAttribute.TAG_CREATE_OPERATION, String.valueOf(service.insert(tag)));
+                ResponseAttribute.TAG_CREATE_OPERATION, String.valueOf(service.insert(tag)));
         responseHateoas.createHateoas(response);
         return response;
     }

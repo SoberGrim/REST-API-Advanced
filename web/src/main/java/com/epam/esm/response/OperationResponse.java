@@ -1,6 +1,6 @@
 package com.epam.esm.response;
 
-import com.epam.esm.attribute.OperationResponseAttribute;
+import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.util.MessageLocale;
 import org.springframework.hateoas.RepresentationModel;
@@ -12,9 +12,9 @@ public class OperationResponse extends RepresentationModel<OperationResponse> {
     private String message;
 
     public enum Operation {
-        CREATION(OperationResponseAttribute.CREATION_OPERATION),
-        DELETION(OperationResponseAttribute.DELETION_OPERATION),
-        OTHER(OperationResponseAttribute.OTHER_OPERATION);
+        CREATION(ResponseAttribute.CREATION_OPERATION),
+        DELETION(ResponseAttribute.DELETION_OPERATION),
+        OTHER(ResponseAttribute.OTHER_OPERATION);
 
         private final String nameKey;
 
@@ -23,7 +23,7 @@ public class OperationResponse extends RepresentationModel<OperationResponse> {
         }
 
         public String getLocalizedOperationName() {
-            return ResourceBundle.getBundle(OperationResponseAttribute.PROPERTY_FILE_NAME,
+            return ResourceBundle.getBundle(ResponseAttribute.PROPERTY_FILE_NAME,
                     MessageLocale.getCurrent()).getString(nameKey);
         }
     }
@@ -33,7 +33,7 @@ public class OperationResponse extends RepresentationModel<OperationResponse> {
 
     public OperationResponse(Operation operation, String messageKey, String detail) {
         this.operation = operation.getLocalizedOperationName();
-        this.message = ResourceBundle.getBundle(OperationResponseAttribute.PROPERTY_FILE_NAME,
+        this.message = ResourceBundle.getBundle(ResponseAttribute.PROPERTY_FILE_NAME,
                 MessageLocale.getCurrent()).getString(messageKey) + Symbol.SPACE_SYMBOL + detail;
     }
 
