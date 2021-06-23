@@ -1,10 +1,8 @@
 package com.epam.esm.dto;
 
-
 import com.epam.esm.dto.audit.AuditListener;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
