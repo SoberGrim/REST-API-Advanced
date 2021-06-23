@@ -3,10 +3,11 @@ package com.epam.esm.response;
 import com.epam.esm.attribute.OperationResponseAttribute;
 import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.util.MessageLocale;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.ResourceBundle;
 
-public class OperationResponse {
+public class OperationResponse extends RepresentationModel<OperationResponse> {
     private String operation;
     private String message;
 
