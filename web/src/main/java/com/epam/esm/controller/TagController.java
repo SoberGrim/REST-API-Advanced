@@ -1,10 +1,10 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.attribute.OperationResponseAttribute;
 import com.epam.esm.dto.Tag;
+import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,16 +36,16 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTag(@PathVariable String id) {
+    public OperationResponse deleteTag(@PathVariable String id) {
         service.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tag deleted successfully" +
-                " (id = " + id + ")");
+        return new OperationResponse(OperationResponse.Operation.DELETION,
+                OperationResponseAttribute.TAG_DELETE_OPERATION, id);
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> createTag(@RequestBody Tag tag) {
+    public OperationResponse createTag(@RequestBody Tag tag) {
         service.insert(tag);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Tag created" +
-                " successfully");
+        return new OperationResponse(OperationResponse.Operation.CREATION,
+                OperationResponseAttribute.TAG_CREATE_OPERATION, tag.toString());
     }
 }

@@ -2,14 +2,14 @@ package com.epam.esm.util;
 
 import java.util.Locale;
 
-public final class ExceptionMessageLocale {
+public final class MessageLocale {
     private static Locale current;
 
     static {
         current = new Locale(CustomLocale.EN.language, CustomLocale.EN.country);
     }
 
-    private ExceptionMessageLocale() {
+    private MessageLocale() {
     }
 
     public static Locale getCurrent() {
