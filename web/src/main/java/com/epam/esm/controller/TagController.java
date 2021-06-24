@@ -2,7 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.dto.Tag;
-import com.epam.esm.hateoas.ControllerHateoas;
+import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ import java.util.List;
 @RequestMapping("/tags")
 public class TagController {
     private final TagService<Tag> service;
-    private final ControllerHateoas<Tag> tagHateoas;
-    private final ControllerHateoas<OperationResponse> responseHateoas;
+    private final Hateoas<Tag> tagHateoas;
+    private final Hateoas<OperationResponse> responseHateoas;
 
     @Autowired
-    public TagController(TagService<Tag> service, ControllerHateoas<Tag> tagHateoas,
-                         ControllerHateoas<OperationResponse> responseHateoas) {
+    public TagController(TagService<Tag> service, Hateoas<Tag> tagHateoas,
+                         Hateoas<OperationResponse> responseHateoas) {
         this.service = service;
         this.tagHateoas = tagHateoas;
         this.responseHateoas = responseHateoas;

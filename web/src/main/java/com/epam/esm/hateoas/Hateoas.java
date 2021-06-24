@@ -1,5 +1,5 @@
 package com.epam.esm.hateoas;
 
-public interface ControllerHateoas<T> {
+public interface Hateoas<T> {
     void createHateoas(T model);
 }
