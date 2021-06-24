@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dto.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,7 +48,7 @@ public class TagDaoImpl implements TagDao<Tag> {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
         Root<Tag> root = criteria.from(Tag.class);
-        criteria.where(builder.equal(root.get("name"), name));
+        criteria.where(builder.equal(root.get(EntityFieldsName.NAME), name));
         Optional<Tag> result = em.createQuery(criteria).getResultStream().findAny();
         em.close();
         return result;
@@ -78,7 +79,7 @@ public class TagDaoImpl implements TagDao<Tag> {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaDelete<Tag> criteria = builder.createCriteriaDelete(Tag.class);
         Root<Tag> root = criteria.from(Tag.class);
-        criteria.where(builder.equal(root.get("id"), id));
+        criteria.where(builder.equal(root.get(EntityFieldsName.ID), id));
         boolean result = em.createQuery(criteria).executeUpdate() == 1;
         em.getTransaction().commit();
         return result;
