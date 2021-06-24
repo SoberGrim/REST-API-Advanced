@@ -12,7 +12,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class GiftCertificateHateoas implements Hateoas<GiftCertificate> {
     @Override
     public void createHateoas(GiftCertificate model) {
-        model.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates()).withSelfRel());
+        model.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates(0, 0))
+                .withSelfRel());
 
         model.add(linkTo(methodOn(GiftCertificateController.class).findCertificateById(String.valueOf(model.getId())))
                 .withSelfRel());

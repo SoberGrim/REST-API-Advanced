@@ -36,20 +36,21 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/all")
-    public List<GiftCertificate> findAllGiftCertificates() {
-        List<GiftCertificate> giftCertificates = service.findAll();
+    public List<GiftCertificate> findAllGiftCertificates(@RequestParam int page, @RequestParam int elements) {
+        List<GiftCertificate> giftCertificates = service.findAll(page, elements);
         giftCertificates.forEach(certificateHateoas::createHateoas);
         return giftCertificates;
     }
 
     @GetMapping
-    public List<GiftCertificate> findCertificatesWithTags(@RequestParam(required = false) String tagName,
+    public List<GiftCertificate> findCertificatesWithTags(@RequestParam int page, @RequestParam int elements,
+                                                          @RequestParam(required = false) String tagName,
                                                           @RequestParam(required = false) String certificateName,
                                                           @RequestParam(required = false) String certificateDescription,
                                                           @RequestParam(required = false) String sortByName,
                                                           @RequestParam(required = false) String sortByDate) {
-        List<GiftCertificate> giftCertificates = service.findCertificatesWithTagsByCriteria(tagName, certificateName,
-                certificateDescription, sortByName, sortByDate);
+        List<GiftCertificate> giftCertificates = service.findCertificatesWithTagsByCriteria(page, elements, tagName,
+                certificateName, certificateDescription, sortByName, sortByDate);
         giftCertificates.forEach(certificateHateoas::createHateoas);
         return giftCertificates;
     }

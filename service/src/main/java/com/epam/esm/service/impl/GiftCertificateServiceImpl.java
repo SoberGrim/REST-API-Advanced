@@ -4,6 +4,7 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.ErrorAttribute;
 import com.epam.esm.dao.constant.SqlGiftCertificateColumnName;
 import com.epam.esm.dao.constant.SqlTagColumnName;
+import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dao.creator.criteria.search.FullMatchSearchCriteria;
 import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCriteria;
@@ -127,12 +128,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return dao.findAll();
+    public List<GiftCertificate> findAll(int page, int elements) {
+        List<GiftCertificate> giftCertificates = dao.findAll(page, elements);
+        if (CollectionUtils.isEmpty(giftCertificates)) {
+            throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+        }
+        return giftCertificates;
     }
 
     @Override
-    public List<GiftCertificate> findCertificatesWithTagsByCriteria(String tagName, String certificateName,
+    public List<GiftCertificate> findCertificatesWithTagsByCriteria(int page, int elements, String tagName,
+                                                                    String certificateName,
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
         List<Criteria> criteriaList = new ArrayList<>(); //fixme
@@ -155,7 +162,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                     : DESC_SORT_ORDERING;
             criteriaList.add(new FieldSortCriteria(SqlGiftCertificateColumnName.CREATE_DATE, sortOrdering));
         }
-        return dao.findWithTags(criteriaList);
+
+        List<GiftCertificate> giftCertificates = dao.findWithTags(page, elements, criteriaList);
+        if (CollectionUtils.isEmpty(giftCertificates)) {
+            throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+        }
+        return giftCertificates;
     }
 
     private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {

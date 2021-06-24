@@ -17,7 +17,7 @@ public interface GiftCertificateDao<T extends GiftCertificate> {
 
     Optional<GiftCertificate> findById(long id);
 
-    List<T> findAll();
+    List<T> findAll(int page, int elements);
 
-    List<T> findWithTags(List<Criteria> criteriaList);
+    List<T> findWithTags(int page, int elements, List<Criteria> criteriaList);
 }

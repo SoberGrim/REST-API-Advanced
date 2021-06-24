@@ -91,19 +91,23 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
+    public List<GiftCertificate> findAll(int page, int elements) {
         EntityManager em = factory.createEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteria = builder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
         criteria.select(root);
-        List<GiftCertificate> giftCertificates = em.createQuery(criteria).getResultList();
+
+        List<GiftCertificate> giftCertificates = (page > 0 && elements > 0) ? em.createQuery(criteria)
+                .setMaxResults(elements).setFirstResult(elements * (page - 1)).getResultList() :
+                em.createQuery(criteria).getResultList();
+
         em.close();
         return giftCertificates;
     }
 
     @Override
-    public List<GiftCertificate> findWithTags(List<Criteria> criteriaList) {
+    public List<GiftCertificate> findWithTags(int page, int elements, List<Criteria> criteriaList) {
         return template.query(queryCreator.createQuery(criteriaList), mapper);//fixme
     }
 }

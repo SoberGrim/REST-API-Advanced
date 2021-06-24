@@ -24,7 +24,9 @@ public class CertificateOperationResponseHateoas implements Hateoas<OperationRes
 
     @Override
     public void createHateoas(OperationResponse response) {
-        response.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates()).withSelfRel());
+        response.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates(0, 0))
+                .withSelfRel());
+
         if (operations.stream().anyMatch(o -> o.getLocalizedOperationName().equalsIgnoreCase(response.getOperation()))) {
             response.add(linkTo(methodOn(GiftCertificateController.class).findCertificateById(findIdFromMessage(response
                     .getMessage()))).withSelfRel());
