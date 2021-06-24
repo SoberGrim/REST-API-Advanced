@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -49,27 +52,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
         return giftCertificate.getId();
     }
 
-    /*@Override
-    public boolean insert(GiftCertificate giftCertificate) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        boolean isQuerySuccess = template.update(con -> {
-            PreparedStatement ps = con.prepareStatement(SqlGiftCertificateQuery.SQL_INSERT_CERTIFICATE,
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, giftCertificate.getName());
-            ps.setString(2, giftCertificate.getDescription());
-            ps.setBigDecimal(3, giftCertificate.getPrice());
-            ps.setInt(4, giftCertificate.getDuration());
-            ps.setTimestamp(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
-            return ps;
-        }, keyHolder) == 1;
-        if (isQuerySuccess && keyHolder.getKey() != null) {
-            return (giftCertificate.getTags() == null || giftCertificate.getTags().isEmpty() ||
-                    connectTags(giftCertificate.getTags(), keyHolder.getKey().longValue()));
-        } else {
-            throw new DaoException("1", "error.generatedKeyIsNull", giftCertificate.toString());
-        }
-    }*/
-
     @Override
     public boolean delete(long id) {
         return template.update(SqlGiftCertificateQuery.SQL_DELETE_CERTIFICATE_BY_ID, id) == 1;
@@ -100,7 +82,14 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
     @Override
     public List<GiftCertificate> findAll() {
-        return template.query(SqlGiftCertificateQuery.SQL_SELECT_ALL_CERTIFICATES, mapper);
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteria = builder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
+        criteria.select(root);
+        List<GiftCertificate> giftCertificates = em.createQuery(criteria).getResultList();
+        em.close();
+        return giftCertificates;
     }
 
     @Override

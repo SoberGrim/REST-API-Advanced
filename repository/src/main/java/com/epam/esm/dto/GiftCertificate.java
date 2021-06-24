@@ -14,13 +14,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -60,7 +60,7 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST}) // FIXME: 6/24/2021 WHAT ABOUT DELETE CERTIFICATE WITH TAGS ???
+    @ManyToMany(cascade = {CascadeType.PERSIST},fetch = FetchType.EAGER) // FIXME: 6/24/2021 WHAT ABOUT DELETE CERTIFICATE WITH TAGS ???
     @JoinTable(
             name = "gift_certificates_tags",
             joinColumns = {@JoinColumn(name = "gift_certificate_id_fk")},

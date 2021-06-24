@@ -47,7 +47,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         this.dao = dao;
         this.tagService = tagService;
     }
-    
+
     @Override
     public long insert(GiftCertificate giftCertificate) {
         long id;
@@ -69,23 +69,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         }
         return id;
     }
-
-    /*@Transactional
-    @Override
-    public long insert(GiftCertificate giftCertificate) {
-        if (isGiftCertificateCreationFormValid(giftCertificate)) {
-            giftCertificate.setCreateDate(LocalDateTime.now());
-            if (!CollectionUtils.isEmpty(giftCertificate.getTags()) && saveNewTags(giftCertificate, tagService.findAll(0, 0))) {
-                List<Tag> tagsWithId = new ArrayList<>();
-                giftCertificate.getTags().forEach(t -> tagsWithId.add(tagService.findByName(t.getName())));
-                giftCertificate.setTags(tagsWithId);
-            }
-            return dao.insert(giftCertificate);
-        } else {
-            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, giftCertificate.toString());
-        }
-    }*/
 
     @Transactional
     @Override

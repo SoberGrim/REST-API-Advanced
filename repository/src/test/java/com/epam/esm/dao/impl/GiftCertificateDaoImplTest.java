@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GiftCertificateDaoImplTest {
-    private static final GiftCertificateDao<GiftCertificate> dao = new GiftCertificateDaoImpl
+    /*private static final GiftCertificateDao<GiftCertificate> dao = new GiftCertificateDaoImpl
             (DataSourceConfig.dataSource, new GiftCertificateMapper(), new SqlGiftCertificateQueryCreator());
 
     @Test
@@ -51,5 +51,5 @@ public class GiftCertificateDaoImplTest {
     public void disconnectAllTagsTest() {
         boolean actual = dao.disconnectAllTags(12345);
         assertFalse(actual);
-    }
+    }*/
 }
