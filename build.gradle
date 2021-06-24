@@ -16,6 +16,7 @@ subprojects {
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.1'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.5.1'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
     }
 
     test {
