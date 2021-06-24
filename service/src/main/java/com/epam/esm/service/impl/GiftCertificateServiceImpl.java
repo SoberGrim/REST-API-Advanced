@@ -10,8 +10,8 @@ import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCriteria;
 import com.epam.esm.dao.creator.criteria.sort.FieldSortCriteria;
 import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Tag;
-import com.epam.esm.response.InvalidFieldException;
-import com.epam.esm.response.ResourceNotFoundException;
+import com.epam.esm.exception.InvalidFieldException;
+import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
@@ -23,9 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.epam.esm.validator.GiftCertificateValidator.areGiftCertificateTagsValid;
 import static com.epam.esm.validator.GiftCertificateValidator.isDescriptionValid;
@@ -69,7 +66,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         return id;
     }
 
-    @Transactional
     @Override
     public boolean delete(String id) {
         try {
@@ -90,26 +86,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         }
     }
 
-    @Transactional
     @Override
-    public boolean update(String id, GiftCertificate newCertificate) {
+    public boolean update(String id, GiftCertificate newCertificate) { // TODO: 6/24/2021 Maybe change function returning value (gift certificate)
         try {
             GiftCertificate oldCertificate = dao.findById(Long.parseLong(id)).orElseThrow(() ->
                     new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
                             ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
 
-            if (updateCertificateFields(oldCertificate, newCertificate) && saveNewTags(oldCertificate,
-                    tagService.findAll(0, 0))) {
+            if (updateCertificateFields(oldCertificate, newCertificate)) {
                 oldCertificate.setLastUpdateDate(LocalDateTime.now());
-
-                List<Tag> connectedTags = tagService.findTagsConnectedToCertificate(id);
-
-                List<Tag> notConnectedTags = tagService.findAll(0, 0).stream()
-                        .filter(t -> !connectedTags.contains(t) && oldCertificate.getTags().contains(t))
-                        .collect(Collectors.toList());
-
-                dao.connectTags(notConnectedTags, oldCertificate.getId());
-                return dao.update(oldCertificate);
+                if (!CollectionUtils.isEmpty(oldCertificate.getTags())) {
+                    List<Tag> newTags = (List<Tag>) CollectionUtils.removeAll(oldCertificate.getTags(),
+                            CollectionUtils.intersection(tagService.findAll(0, 0), oldCertificate.getTags()));
+                    newTags.forEach(tagService::insert);
+                }
+                dao.update(oldCertificate);
             } else {
                 throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
                         ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, newCertificate.toString());
@@ -118,6 +109,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
                     ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
+        return true;
     }
 
     @Override
@@ -188,7 +180,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             result = true;
         }
         if (areGiftCertificateTagsValid(newCertificate.getTags())) {
-            oldCertificate.setTags(newCertificate.getTags());
+            List<Tag> tags = new ArrayList<>(oldCertificate.getTags());
+            newCertificate.getTags().stream()
+                    .filter(t -> !tags.contains(t))
+                    .forEach(tags::add);
+            oldCertificate.setTags(tags);
             result = true;
         }
         return result;

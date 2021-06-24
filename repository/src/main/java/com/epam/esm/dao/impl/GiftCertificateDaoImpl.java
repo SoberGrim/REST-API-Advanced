@@ -8,12 +8,9 @@ import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
 import com.epam.esm.dto.Tag;
-import com.epam.esm.exception.DaoException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -82,19 +79,19 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
     @Override
     public boolean update(GiftCertificate giftCertificate) {
-        return template.update(SqlGiftCertificateQuery.SQL_UPDATE_CERTIFICATE_BY_ID, giftCertificate.getName(),
-                giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(),
-                giftCertificate.getLastUpdateDate(), giftCertificate.getId()) == 1;
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.merge(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return true;
     }
 
     @Override
     public Optional<GiftCertificate> findById(long id) {
-        List<GiftCertificate> giftCertificates = template.query(SqlGiftCertificateQuery.SQL_SELECT_CERTIFICATE_BY_ID,
-                mapper, id);
-        Optional<GiftCertificate> giftCertificate = Optional.empty();
-        if (giftCertificates != null && !giftCertificates.isEmpty()) {
-            giftCertificate = Optional.of(giftCertificates.get(0));
-        }
+        EntityManager em = factory.createEntityManager();
+        Optional<GiftCertificate> giftCertificate = Optional.ofNullable(em.find(GiftCertificate.class, id));
+        em.close();
         return giftCertificate;
     }
 
@@ -117,7 +114,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
     @Override
     public boolean connectTags(List<Tag> tags, long certificateId) {
-        return tags.stream()
+        return tags.stream() //fixme
                 .allMatch(t -> template.update(SqlGiftCertificateQuery.SQL_UPDATE_CERTIFICATE_TAG,
                         certificateId, t.getId()) == 1);
     }

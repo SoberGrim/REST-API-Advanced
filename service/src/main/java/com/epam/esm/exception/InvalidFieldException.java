@@ -1,4 +1,4 @@
-package com.epam.esm.response;
+package com.epam.esm.exception;
 
 import com.epam.esm.dao.constant.ErrorAttribute;
 

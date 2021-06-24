@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dto.GiftCertificate;
-import com.epam.esm.response.InvalidFieldException;
+import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.service.GiftCertificateService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

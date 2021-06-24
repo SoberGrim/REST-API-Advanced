@@ -2,7 +2,7 @@ package com.epam.esm.handler;
 
 import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.response.ExceptionResponse;
-import com.epam.esm.response.InvalidFieldException;
+import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.util.MessageLocale;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

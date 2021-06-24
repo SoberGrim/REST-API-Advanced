@@ -4,9 +4,9 @@ import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.ErrorAttribute;
 import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dto.Tag;
-import com.epam.esm.response.InvalidFieldException;
-import com.epam.esm.response.ResourceDuplicateException;
-import com.epam.esm.response.ResourceNotFoundException;
+import com.epam.esm.exception.InvalidFieldException;
+import com.epam.esm.exception.ResourceDuplicateException;
+import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.TagService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,16 +49,6 @@ public class TagServiceImpl implements TagService<Tag> {
     }
 
     @Override
-    public Tag findByName(String name) {
-        if (isNameValid(name)) {
-            return dao.findByName(name).orElseThrow(() -> new ResourceNotFoundException(
-                    ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, name));
-        } else {
-            throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_ID_ERROR, name);
-        }
-    }
-
-    @Override
     public List<Tag> findAll(int page, int elements) {
         List<Tag> tags = dao.findAll(page, elements);
         if (CollectionUtils.isEmpty(tags)) {
@@ -66,16 +56,6 @@ public class TagServiceImpl implements TagService<Tag> {
                     page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
         }
         return tags;
-    }
-
-    @Override
-    public List<Tag> findTagsConnectedToCertificate(String certificateId) {
-        try {
-            return dao.findTagsConnectedToCertificate(Long.parseLong(certificateId));
-        } catch (NumberFormatException e) {
-            throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_ID_ERROR,
-                    certificateId);
-        }
     }
 
     @Override

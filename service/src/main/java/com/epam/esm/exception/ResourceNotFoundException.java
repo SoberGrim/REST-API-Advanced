@@ -1,16 +1,16 @@
-package com.epam.esm.response;
+package com.epam.esm.exception;
 
 import com.epam.esm.dao.constant.ErrorAttribute;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class ResourceDuplicateException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
     private String errorCode;
     private String messageKey;
     private String detail;
 
-    public ResourceDuplicateException(String errorCode, String messageKey, String detail) {
+    public ResourceNotFoundException(String errorCode, String messageKey, String detail) {
         this.errorCode = errorCode;
         this.messageKey = messageKey;
         this.detail = detail;

@@ -9,11 +9,7 @@ public interface TagService<T extends Tag> {
 
     T findById(String id);
 
-    T findByName(String name);
-
     List<T> findAll(int page, int elements);
-
-    List<T> findTagsConnectedToCertificate(String certificateId);
 
     boolean delete(String id);
 }

@@ -37,9 +37,9 @@ public class TagDaoImpl implements TagDao<Tag> {
     @Override
     public Optional<Tag> findById(long id) {
         EntityManager em = factory.createEntityManager();
-        Optional<Tag> result = Optional.ofNullable(em.find(Tag.class, id));
+        Optional<Tag> tag = Optional.ofNullable(em.find(Tag.class, id));
         em.close();
-        return result;
+        return tag;
     }
 
     @Override
@@ -49,9 +49,9 @@ public class TagDaoImpl implements TagDao<Tag> {
         CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
         Root<Tag> root = criteria.from(Tag.class);
         criteria.where(builder.equal(root.get(EntityFieldsName.NAME), name));
-        Optional<Tag> result = em.createQuery(criteria).getResultStream().findAny();
+        Optional<Tag> tag = em.createQuery(criteria).getResultStream().findAny();
         em.close();
-        return result;
+        return tag;
     }
 
     @Override
@@ -65,12 +65,6 @@ public class TagDaoImpl implements TagDao<Tag> {
                 .setFirstResult(elements * (page - 1)).getResultList() : em.createQuery(criteria).getResultList();
         em.close();
         return tags;
-    }
-
-    @Override
-    public List<Tag> findTagsConnectedToCertificate(long id) {
-        //fixme
-        return null;
     }
 
     @Override

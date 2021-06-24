@@ -60,7 +60,7 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST},fetch = FetchType.EAGER) // FIXME: 6/24/2021 WHAT ABOUT DELETE CERTIFICATE WITH TAGS ???
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "gift_certificates_tags",
             joinColumns = {@JoinColumn(name = "gift_certificate_id_fk")},
