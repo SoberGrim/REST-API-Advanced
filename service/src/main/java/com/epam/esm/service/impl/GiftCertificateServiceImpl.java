@@ -16,7 +16,6 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,10 +74,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     public boolean delete(String id) {
         try {
             Optional<GiftCertificate> giftCertificateOptional = dao.findById(Long.parseLong(id));
-            if (giftCertificateOptional.isPresent()) {
+            if (giftCertificateOptional.isPresent()) { // TODO: 6/24/2021 check if the certificate has been ordered by users
                 GiftCertificate giftCertificate = giftCertificateOptional.get();
-                if (giftCertificate.getTags() != null && !giftCertificate.getTags().isEmpty()) {
-                    dao.disconnectAllTags(giftCertificate.getId());
+                if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
+                    dao.disconnectAllTags(giftCertificate);
                 }
                 return dao.delete(giftCertificate.getId());
             } else {

@@ -76,11 +76,11 @@ public class TagDaoImpl implements TagDao<Tag> {
     @Override
     public boolean delete(long id) {
         EntityManager em = factory.createEntityManager();
-        em.getTransaction().begin();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaDelete<Tag> criteria = builder.createCriteriaDelete(Tag.class);
         Root<Tag> root = criteria.from(Tag.class);
         criteria.where(builder.equal(root.get(EntityFieldsName.ID), id));
+        em.getTransaction().begin();
         boolean result = em.createQuery(criteria).executeUpdate() == 1;
         em.getTransaction().commit();
         return result;

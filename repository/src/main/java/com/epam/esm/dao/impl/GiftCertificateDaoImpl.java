@@ -1,6 +1,7 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.constant.SqlGiftCertificateQuery;
 import com.epam.esm.dao.creator.SqlQueryCreator;
 import com.epam.esm.dao.creator.criteria.Criteria;
@@ -8,6 +9,7 @@ import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
 import com.epam.esm.dto.Tag;
 import com.epam.esm.exception.DaoException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
@@ -54,12 +57,27 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
     @Override
     public boolean delete(long id) {
-        return template.update(SqlGiftCertificateQuery.SQL_DELETE_CERTIFICATE_BY_ID, id) == 1;
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<GiftCertificate> criteria = builder.createCriteriaDelete(GiftCertificate.class);
+        Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.ID), id));
+        em.getTransaction().begin();
+        boolean result = em.createQuery(criteria).executeUpdate() == 1;
+        em.getTransaction().commit();
+        em.close();
+        return result;
     }
 
     @Override
-    public boolean disconnectAllTags(long id) {
-        return template.update(SqlGiftCertificateQuery.SQL_DELETE_TAGS_FROM_CERTIFICATE_BY_CERTIFICATE_ID, id) == 1;
+    public boolean disconnectAllTags(GiftCertificate giftCertificate) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        giftCertificate.setTags(null);
+        em.merge(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return CollectionUtils.isEmpty(giftCertificate.getTags());
     }
 
     @Override

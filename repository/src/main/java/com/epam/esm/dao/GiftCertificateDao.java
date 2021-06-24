@@ -12,7 +12,7 @@ public interface GiftCertificateDao<T extends GiftCertificate> {
 
     boolean delete(long id);
 
-    boolean disconnectAllTags(long id);
+    boolean disconnectAllTags(GiftCertificate giftCertificate);
 
     boolean update(T t);
 
