@@ -69,6 +69,7 @@ public class TagDaoImpl implements TagDao<Tag> {
 
     @Override
     public List<Tag> findTagsConnectedToCertificate(long id) {
+        //fixme
         return null;
     }
 

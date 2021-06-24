@@ -14,6 +14,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -26,15 +28,28 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
     private final JdbcTemplate template;
     private final GiftCertificateMapper mapper;
     private final SqlQueryCreator queryCreator;
+    private final EntityManagerFactory factory;
 
     @Autowired
-    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper mapper, SqlQueryCreator queryCreator) {
+    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper mapper, SqlQueryCreator queryCreator,
+                                  EntityManagerFactory factory) {
         this.template = new JdbcTemplate(dataSource);
         this.mapper = mapper;
         this.queryCreator = queryCreator;
+        this.factory = factory;
     }
 
     @Override
+    public long insert(GiftCertificate giftCertificate) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return giftCertificate.getId();
+    }
+
+    /*@Override
     public boolean insert(GiftCertificate giftCertificate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         boolean isQuerySuccess = template.update(con -> {
@@ -53,7 +68,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
         } else {
             throw new DaoException("1", "error.generatedKeyIsNull", giftCertificate.toString());
         }
-    }
+    }*/
 
     @Override
     public boolean delete(long id) {
