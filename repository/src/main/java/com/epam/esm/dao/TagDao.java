@@ -12,7 +12,7 @@ public interface TagDao<T extends Tag> {
 
     Optional<T> findByName(String name);
 
-    List<T> findAll();
+    List<T> findAll(int page, int elements);
 
     List<T> findTagsConnectedToCertificate(long id);
 

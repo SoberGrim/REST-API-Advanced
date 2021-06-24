@@ -2,11 +2,13 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.ErrorAttribute;
+import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dto.Tag;
 import com.epam.esm.response.InvalidFieldException;
 import com.epam.esm.response.ResourceDuplicateException;
 import com.epam.esm.response.ResourceNotFoundException;
 import com.epam.esm.service.TagService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,8 +59,13 @@ public class TagServiceImpl implements TagService<Tag> {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return dao.findAll();
+    public List<Tag> findAll(int page, int elements) {
+        List<Tag> tags = dao.findAll(page, elements);
+        if (CollectionUtils.isEmpty(tags)) {
+            throw new ResourceNotFoundException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR,
+                    page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+        }
+        return tags;
     }
 
     @Override

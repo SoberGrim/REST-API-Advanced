@@ -11,7 +11,7 @@ public interface TagService<T extends Tag> {
 
     T findByName(String name);
 
-    List<T> findAll();
+    List<T> findAll(int page, int elements);
 
     List<T> findTagsConnectedToCertificate(String certificateId);
 

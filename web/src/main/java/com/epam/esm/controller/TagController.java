@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class TagController {
     }
 
     @GetMapping
-    public List<Tag> findAllTags() {
-        List<Tag> tags = service.findAll();
+    public List<Tag> findAllTags(@RequestParam int page, @RequestParam int elements) {
+        List<Tag> tags = service.findAll(page, elements);
         tags.forEach(tagHateoas::createHateoas);
         return tags;
     }

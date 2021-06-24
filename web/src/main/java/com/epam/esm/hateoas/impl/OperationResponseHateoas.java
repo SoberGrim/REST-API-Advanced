@@ -16,7 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class OperationResponseHateoas implements Hateoas<OperationResponse> {
     @Override
     public void createHateoas(OperationResponse response) {
-        response.add(linkTo(methodOn(TagController.class).findAllTags()).withSelfRel());
+        response.add(linkTo(methodOn(TagController.class).findAllTags(0,0)).withSelfRel());
         if (response.getOperation().equalsIgnoreCase(ResourceBundle.getBundle(ResponseAttribute.PROPERTY_FILE_NAME,
                 MessageLocale.getCurrent()).getString(ResponseAttribute.CREATION_OPERATION))) {
             response.add(linkTo(methodOn(TagController.class).findTagById(findIdFromMessage(response.getMessage())))

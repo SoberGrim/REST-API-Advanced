@@ -51,7 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     public boolean insert(GiftCertificate giftCertificate) {
         if (isGiftCertificateCreationFormValid(giftCertificate)) {
             giftCertificate.setCreateDate(LocalDateTime.now());
-            if (giftCertificate.getTags() != null && saveNewTags(giftCertificate, tagService.findAll())) {
+            if (giftCertificate.getTags() != null && saveNewTags(giftCertificate, tagService.findAll(0, 0))) {
                 List<Tag> tagsWithId = new ArrayList<>();
                 giftCertificate.getTags().forEach(t -> tagsWithId.add(tagService.findByName(t.getName())));
                 giftCertificate.setTags(tagsWithId);
@@ -93,12 +93,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                             ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
 
             if (updateCertificateFields(oldCertificate, newCertificate) && saveNewTags(oldCertificate,
-                    tagService.findAll())) {
+                    tagService.findAll(0, 0))) {
                 oldCertificate.setLastUpdateDate(LocalDateTime.now());
 
                 List<Tag> connectedTags = tagService.findTagsConnectedToCertificate(id);
 
-                List<Tag> notConnectedTags = tagService.findAll().stream()
+                List<Tag> notConnectedTags = tagService.findAll(0, 0).stream()
                         .filter(t -> !connectedTags.contains(t) && oldCertificate.getTags().contains(t))
                         .collect(Collectors.toList());
 
