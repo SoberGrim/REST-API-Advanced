@@ -16,6 +16,7 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                 List<Tag> newTags = (List<Tag>) CollectionUtils.removeAll(giftCertificate.getTags(), existingTags);
                 giftCertificate.setTags(newTags);
                 id = dao.insert(giftCertificate);
-                dao.connectTags(existingTags, id);
+                GiftCertificate certificateWithAllTags = dao.findById(id).get();
+                certificateWithAllTags.setTags(ListUtils.union(newTags, existingTags));
+                dao.update(certificateWithAllTags);
             } else {
                 id = dao.insert(giftCertificate);
             }
@@ -153,12 +156,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             criteriaList.add(new FieldSortCriteria(SqlGiftCertificateColumnName.CREATE_DATE, sortOrdering));
         }
         return dao.findWithTags(criteriaList);
-    }
-
-    private boolean saveNewTags(GiftCertificate giftCertificate, List<Tag> existingTags) {
-        return giftCertificate.getTags().stream()
-                .filter(t -> !existingTags.contains(t))
-                .allMatch(t -> tagService.insert(t) > 0); // FIXME: 6/24/2021 insert tag returns long NOT boolean
     }
 
     private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {

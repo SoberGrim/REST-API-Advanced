@@ -2,12 +2,10 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
-import com.epam.esm.dao.constant.SqlGiftCertificateQuery;
 import com.epam.esm.dao.creator.SqlQueryCreator;
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dto.Tag;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,9 +18,6 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,13 +104,6 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
     @Override
     public List<GiftCertificate> findWithTags(List<Criteria> criteriaList) {
-        return template.query(queryCreator.createQuery(criteriaList), mapper);
-    }
-
-    @Override
-    public boolean connectTags(List<Tag> tags, long certificateId) {
-        return tags.stream() //fixme
-                .allMatch(t -> template.update(SqlGiftCertificateQuery.SQL_UPDATE_CERTIFICATE_TAG,
-                        certificateId, t.getId()) == 1);
+        return template.query(queryCreator.createQuery(criteriaList), mapper);//fixme
     }
 }
