@@ -135,7 +135,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     public List<GiftCertificate> findCertificatesWithTagsByCriteria(String tagName, String certificateName,
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
-        List<Criteria> criteriaList = new ArrayList<>();
+        List<Criteria> criteriaList = new ArrayList<>(); //fixme
         if (TagValidator.isNameValid(tagName)) {
             criteriaList.add(new FullMatchSearchCriteria(SqlTagColumnName.TAG_NAME, tagName));
         }
