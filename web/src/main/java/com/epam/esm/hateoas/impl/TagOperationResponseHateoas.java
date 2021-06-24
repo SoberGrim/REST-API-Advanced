@@ -1,24 +1,29 @@
 package com.epam.esm.hateoas.impl;
 
-import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
-import com.epam.esm.util.MessageLocale;
 import org.springframework.stereotype.Component;
 
-import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class OperationResponseHateoas implements Hateoas<OperationResponse> {
+public class TagOperationResponseHateoas implements Hateoas<OperationResponse> {
+    private static final List<OperationResponse.Operation> operations = new ArrayList<>();
+
+    static {
+        operations.add(OperationResponse.Operation.CREATION);
+        operations.add(OperationResponse.Operation.UPDATE);
+    }
+
     @Override
     public void createHateoas(OperationResponse response) {
-        response.add(linkTo(methodOn(TagController.class).findAllTags(0,0)).withSelfRel());
-        if (response.getOperation().equalsIgnoreCase(ResourceBundle.getBundle(ResponseAttribute.PROPERTY_FILE_NAME,
-                MessageLocale.getCurrent()).getString(ResponseAttribute.CREATION_OPERATION))) {
+        response.add(linkTo(methodOn(TagController.class).findAllTags(0, 0)).withSelfRel());
+        if (operations.stream().anyMatch(o -> o.getLocalizedOperationName().equalsIgnoreCase(response.getOperation()))) {
             response.add(linkTo(methodOn(TagController.class).findTagById(findIdFromMessage(response.getMessage())))
                     .withSelfRel());
         }

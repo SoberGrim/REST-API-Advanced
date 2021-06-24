@@ -6,6 +6,7 @@ import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class TagController {
 
     @Autowired
     public TagController(TagService<Tag> service, Hateoas<Tag> tagHateoas,
-                         Hateoas<OperationResponse> responseHateoas) {
+                         @Qualifier("tagOperationResponseHateoas") Hateoas<OperationResponse> responseHateoas) {
         this.service = service;
         this.tagHateoas = tagHateoas;
         this.responseHateoas = responseHateoas;

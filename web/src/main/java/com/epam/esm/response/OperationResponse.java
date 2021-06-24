@@ -14,6 +14,7 @@ public class OperationResponse extends RepresentationModel<OperationResponse> {
     public enum Operation {
         CREATION(ResponseAttribute.CREATION_OPERATION),
         DELETION(ResponseAttribute.DELETION_OPERATION),
+        UPDATE(ResponseAttribute.UPDATE_OPERATION),
         OTHER(ResponseAttribute.OTHER_OPERATION);
 
         private final String nameKey;
