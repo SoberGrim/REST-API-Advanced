@@ -15,6 +15,8 @@ import com.epam.esm.response.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +47,35 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         this.dao = dao;
         this.tagService = tagService;
     }
-
-    @Transactional
+    
     @Override
-    public boolean insert(GiftCertificate giftCertificate) {
+    public long insert(GiftCertificate giftCertificate) {
+        long id;
         if (isGiftCertificateCreationFormValid(giftCertificate)) {
             giftCertificate.setCreateDate(LocalDateTime.now());
-            if (giftCertificate.getTags() != null && saveNewTags(giftCertificate, tagService.findAll(0, 0))) {
+            if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
+                List<Tag> existingTags = (List<Tag>) CollectionUtils.intersection(tagService.findAll(0, 0),
+                        giftCertificate.getTags());
+                List<Tag> newTags = (List<Tag>) CollectionUtils.removeAll(giftCertificate.getTags(), existingTags);
+                giftCertificate.setTags(newTags);
+                id = dao.insert(giftCertificate);
+                dao.connectTags(existingTags, id);
+            } else {
+                id = dao.insert(giftCertificate);
+            }
+        } else {
+            throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                    ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, giftCertificate.toString());
+        }
+        return id;
+    }
+
+    /*@Transactional
+    @Override
+    public long insert(GiftCertificate giftCertificate) {
+        if (isGiftCertificateCreationFormValid(giftCertificate)) {
+            giftCertificate.setCreateDate(LocalDateTime.now());
+            if (!CollectionUtils.isEmpty(giftCertificate.getTags()) && saveNewTags(giftCertificate, tagService.findAll(0, 0))) {
                 List<Tag> tagsWithId = new ArrayList<>();
                 giftCertificate.getTags().forEach(t -> tagsWithId.add(tagService.findByName(t.getName())));
                 giftCertificate.setTags(tagsWithId);
@@ -61,7 +85,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
                     ErrorAttribute.INVALID_GIFT_CERTIFICATE_ERROR, giftCertificate.toString());
         }
-    }
+    }*/
 
     @Transactional
     @Override
@@ -160,7 +184,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     private boolean saveNewTags(GiftCertificate giftCertificate, List<Tag> existingTags) {
         return giftCertificate.getTags().stream()
                 .filter(t -> !existingTags.contains(t))
-                .allMatch(t -> tagService.insert(t) != 0); // FIXME: 6/24/2021 insert tag returns long NOT boolean
+                .allMatch(t -> tagService.insert(t) > 0); // FIXME: 6/24/2021 insert tag returns long NOT boolean
     }
 
     private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {
