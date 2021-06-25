@@ -137,14 +137,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     }
 
     @Override
-    public List<GiftCertificate> findCertificatesWithTagsByCriteria(int page, int elements, String tagName,
+    public List<GiftCertificate> findCertificatesWithTagsByCriteria(int page, int elements, List<String> tagsNames,
                                                                     String certificateName,
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
         List<Criteria<GiftCertificate>> certificateCriteriaList = new ArrayList<>(); //fixme
-        if (TagValidator.isNameValid(tagName)) {
+        if (tagsNames.stream().allMatch(TagValidator::isNameValid)) {
             List<Tag> tags = new ArrayList<>();
-            tags.add(tagService.findByName(tagName));
+            tagsNames.forEach(t -> tags.add(tagService.findByName(t)));
             certificateCriteriaList.add(new FullMatchSearchCertificateCriteria(tags));
         }
         if (isNameValid(certificateName)) {
