@@ -30,3 +30,9 @@ INSERT INTO users (first_name, last_name, email) VALUES('Marting','Grace','marti
 INSERT INTO users (first_name, last_name, email) VALUES('David','Sky','david@gmail.com');
 INSERT INTO users (first_name, last_name, email) VALUES('Bob','Space','spacebob123@gmail.com');
 INSERT INTO users (first_name, last_name, email) VALUES('Rick','Sun','always_sun@gmail.com');
+
+INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(1, 1, 1);
+INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(2, 1, 2);
+INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(3, 1, 3);
+INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(4, 3, 1);
+INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(5, 4, 1);
