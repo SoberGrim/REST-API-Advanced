@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GiftCertificateServiceImplTest {
-    private static GiftCertificate giftCertificate;
+    /*private static GiftCertificate giftCertificate;
     private GiftCertificateService<GiftCertificate> service;
     @Mock
     private GiftCertificateDao<GiftCertificate> dao;
@@ -57,5 +57,5 @@ public class GiftCertificateServiceImplTest {
     @Test()
     public void insertTest() {
         assertThrows(InvalidFieldException.class, () -> service.insert(giftCertificate));
-    }
+    }*/
 }

@@ -24,7 +24,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,12 +60,12 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "gift_certificates_tags",
             joinColumns = {@JoinColumn(name = "gift_certificate_id_fk")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id_fk")}
     )
 
-    private List<Tag> tags;
+    private Set<Tag> tags;
 }

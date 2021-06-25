@@ -23,6 +23,6 @@ public class UserHateoas implements Hateoas<User> {
     public void createHateoas(User user) {
         user.add(linkTo(methodOn(UserController.class).findAllUsers(0, 0)).withSelfRel());
         user.add(linkTo(methodOn(UserController.class).findUserById(String.valueOf(user.getId()))).withSelfRel());
-        user.getGiftCertificates().forEach(certificateHateoas::createHateoas);
+        // TODO: 6/26/2021 add certificate and ordes hateoas
     }
 }

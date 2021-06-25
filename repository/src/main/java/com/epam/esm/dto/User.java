@@ -13,15 +13,10 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,12 +43,14 @@ public class User extends RepresentationModel<User> {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    // TODO: 6/26/2021 add orders (one to many)
+
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_gift_certificates",
             joinColumns = {@JoinColumn(name = "user_id_fk")},
             inverseJoinColumns = {@JoinColumn(name = "gift_certificate_id_fk")}
     )
 
-    private List<GiftCertificate> giftCertificates;
+    private Set<GiftCertificate> giftCertificates;*/
 }

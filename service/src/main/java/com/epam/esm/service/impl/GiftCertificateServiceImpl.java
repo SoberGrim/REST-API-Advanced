@@ -16,14 +16,16 @@ import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.epam.esm.validator.GiftCertificateValidator.areGiftCertificateTagsValid;
 import static com.epam.esm.validator.GiftCertificateValidator.isDescriptionValid;
@@ -51,13 +53,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         if (isGiftCertificateCreationFormValid(giftCertificate)) {
             giftCertificate.setCreateDate(LocalDateTime.now());
             if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
-                List<Tag> existingTags = (List<Tag>) CollectionUtils.intersection(tagService.findAll(0, 0),
+                Set<Tag> existingTags = SetUtils.intersection(new HashSet<>(tagService.findAll(0, 0)),
                         giftCertificate.getTags());
-                List<Tag> newTags = (List<Tag>) CollectionUtils.removeAll(giftCertificate.getTags(), existingTags);
+                Set<Tag> newTags = new HashSet<>(CollectionUtils.removeAll(giftCertificate.getTags(), existingTags));
                 giftCertificate.setTags(newTags);
                 id = dao.insert(giftCertificate);
                 GiftCertificate certificateWithAllTags = dao.findById(id).get();
-                certificateWithAllTags.setTags(ListUtils.union(newTags, existingTags));
+                certificateWithAllTags.setTags(SetUtils.union(newTags, existingTags));
                 dao.update(certificateWithAllTags);
             } else {
                 id = dao.insert(giftCertificate);
@@ -191,11 +193,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
             result = true;
         }
         if (areGiftCertificateTagsValid(newCertificate.getTags())) {
-            List<Tag> tags = new ArrayList<>(oldCertificate.getTags());
-            newCertificate.getTags().stream()
-                    .filter(t -> !tags.contains(t))
-                    .forEach(tags::add);
-            oldCertificate.setTags(tags);
+            oldCertificate.setTags(SetUtils.union(oldCertificate.getTags(), newCertificate.getTags()));
             result = true;
         }
         return result;
