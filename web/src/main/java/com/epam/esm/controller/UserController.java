@@ -16,32 +16,32 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService<User> service;
-    private final Hateoas<User> hateoas;
-//fixme fix hateoas
+    private final Hateoas<User> userHateoas;
+
     @Autowired
-    public UserController(UserService<User> service, Hateoas<User> hateoas) {
+    public UserController(UserService<User> service, Hateoas<User> userHateoas) {
         this.service = service;
-        this.hateoas = hateoas;
+        this.userHateoas = userHateoas;
     }
 
     @GetMapping("/{id}")
     public User findUserById(@PathVariable String id) {
         User user = service.findById(id);
-        hateoas.createHateoas(user);
+        userHateoas.createHateoas(user);
         return user;
     }
 
     @GetMapping
     public List<User> findUsersWithCertificate(@RequestParam int page, @RequestParam int elements) {
         List<User> users = service.findWithGiftCertificates(page, elements);
-        users.forEach(hateoas::createHateoas);
+        users.forEach(userHateoas::createHateoas);
         return users;
     }
 
     @GetMapping("/all")
     public List<User> findAllUsers(@RequestParam int page, @RequestParam int elements) {
         List<User> users = service.findAll(page, elements);
-        users.forEach(hateoas::createHateoas);
+        users.forEach(userHateoas::createHateoas);
         return users;
     }
 }

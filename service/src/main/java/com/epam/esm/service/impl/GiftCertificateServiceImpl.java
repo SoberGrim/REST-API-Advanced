@@ -142,7 +142,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
         List<Criteria<GiftCertificate>> certificateCriteriaList = new ArrayList<>();
-        if (tagsNames.stream().allMatch(TagValidator::isNameValid)) {
+        if (!CollectionUtils.isEmpty(tagsNames) && tagsNames.stream().allMatch(TagValidator::isNameValid)) {
             List<Tag> tags = new ArrayList<>();
             tagsNames.forEach(t -> tags.add(tagService.findByName(t)));
             certificateCriteriaList.add(new FullMatchSearchCertificateCriteria(tags));
