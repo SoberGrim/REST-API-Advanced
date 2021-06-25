@@ -1,7 +1,7 @@
 package com.epam.esm.dao.creator;
 
 import com.epam.esm.dao.constant.EntityFieldsName;
-import com.epam.esm.dao.creator.criteria.CertificateCriteria;
+import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -15,11 +15,11 @@ import java.util.Objects;
 @Component
 public class GiftCertificateQueryCreator implements QueryCreator<GiftCertificate> {
     @Override
-    public void createCriteria(List<CertificateCriteria> certificateCriteriaList, CriteriaQuery<GiftCertificate> criteriaQuery,
-                               CriteriaBuilder builder, Root<GiftCertificate> root) {
+    public void createCriteria(List<Criteria<GiftCertificate>> criteriaList, CriteriaQuery<GiftCertificate>
+            criteriaQuery, CriteriaBuilder builder, Root<GiftCertificate> root) {
         criteriaQuery.where(builder.isNotEmpty(root.get(EntityFieldsName.TAGS)));
-        if (!CollectionUtils.isEmpty(certificateCriteriaList)) {
-            certificateCriteriaList.stream().filter(Objects::nonNull).forEach(c -> c.acceptCriteria(criteriaQuery, builder, root));
+        if (!CollectionUtils.isEmpty(criteriaList)) {
+            criteriaList.stream().filter(Objects::nonNull).forEach(c -> c.acceptCriteria(criteriaQuery, builder, root));
         }
     }
 }

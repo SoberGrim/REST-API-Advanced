@@ -8,6 +8,7 @@ import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceDuplicateException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,16 @@ public class TagServiceImpl implements TagService<Tag> {
                     ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
         } catch (NumberFormatException e) {
             throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_ID_ERROR, id);
+        }
+    }
+
+    @Override
+    public Tag findByName(String name) {
+        if (TagValidator.isNameValid(name)) {
+            return dao.findByName(name).orElseThrow(() -> new ResourceNotFoundException(ErrorAttribute.TAG_ERROR_CODE,
+                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, name));
+        } else {
+            throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_NAME, name);
         }
     }
 

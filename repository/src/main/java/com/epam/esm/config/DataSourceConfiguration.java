@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 import javax.sql.DataSource;
 
 @Configuration
-public class DatabaseConfiguration {
+public class DataSourceConfiguration {
     private static final String DATABASE_DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
     private static final String DATABASE_URL = "spring.datasource.url";
     private static final String DATABASE_USERNAME = "spring.datasource.username";

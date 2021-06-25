@@ -3,13 +3,10 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.creator.QueryCreator;
-import com.epam.esm.dao.creator.criteria.CertificateCriteria;
+import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dto.Tag;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,23 +14,18 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
+
 import javax.persistence.criteria.Root;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificate> {
-    private final JdbcTemplate template;
-    private final GiftCertificateMapper mapper;
     private final QueryCreator<GiftCertificate> criteriaCreator;
     private final EntityManagerFactory factory;
 
     @Autowired
-    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper mapper, QueryCreator<GiftCertificate> criteriaCreator,
-                                  EntityManagerFactory factory) {
-        this.template = new JdbcTemplate(dataSource);
-        this.mapper = mapper;
+    public GiftCertificateDaoImpl(QueryCreator<GiftCertificate> criteriaCreator, EntityManagerFactory factory) {
         this.criteriaCreator = criteriaCreator;
         this.factory = factory;
     }
@@ -108,7 +100,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
     }
 
     @Override
-    public List<GiftCertificate> findWithTags(int page, int elements, List<CertificateCriteria> certificateCriteriaList) {
+    public List<GiftCertificate> findWithTags(int page, int elements, List<Criteria<GiftCertificate>> certificateCriteriaList) {
         EntityManager em = factory.createEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteria = builder.createQuery(GiftCertificate.class);
@@ -116,15 +108,10 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificat
 
         criteriaCreator.createCriteria(certificateCriteriaList, criteria, builder, root);
 
-        //criteria.orderBy(builder.asc(root.get(EntityFieldsName.CREATE_DATE))); work
-        // criteria.where(builder.like(root.get(EntityFieldsName.DESCRIPTION), "%car%")); work
-
         List<GiftCertificate> giftCertificates = (page > 0 && elements > 0) ? em.createQuery(criteria)
                 .setMaxResults(elements).setFirstResult(elements * (page - 1)).getResultList() :
                 em.createQuery(criteria).getResultList();
-
         em.close();
         return giftCertificates;
-        //return template.query(queryCreator.createQuery(certificateCriteriaList), mapper);//fixme
     }
 }

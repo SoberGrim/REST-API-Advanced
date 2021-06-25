@@ -9,6 +9,8 @@ public interface TagService<T extends Tag> {
 
     T findById(String id);
 
+    T findByName(String name);
+
     List<T> findAll(int page, int elements);
 
     boolean delete(String id);

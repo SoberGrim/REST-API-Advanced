@@ -4,7 +4,8 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.constant.ErrorAttribute;
 import com.epam.esm.dao.constant.Symbol;
-import com.epam.esm.dao.creator.criteria.CertificateCriteria;
+import com.epam.esm.dao.creator.criteria.Criteria;
+import com.epam.esm.dao.creator.criteria.search.FullMatchSearchCertificateCriteria;
 import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCertificateCriteria;
 import com.epam.esm.dao.creator.criteria.sort.FieldSortCertificateCriteria;
 import com.epam.esm.dto.GiftCertificate;
@@ -13,6 +14,7 @@ import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
+import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,10 +141,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                                                                     String certificateName,
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
-        List<CertificateCriteria> certificateCriteriaList = new ArrayList<>(); //fixme
-        /*if (TagValidator.isNameValid(tagName)) {
-            certificateCriteriaList.add(new FullMatchSearchCertificateCriteria(SqlTagColumnName.TAG_NAME, tagName));
-        }*/
+        List<Criteria<GiftCertificate>> certificateCriteriaList = new ArrayList<>(); //fixme
+        if (TagValidator.isNameValid(tagName)) {
+            List<Tag> tags = new ArrayList<>();
+            tags.add(tagService.findByName(tagName));
+            certificateCriteriaList.add(new FullMatchSearchCertificateCriteria(tags));
+        }
         if (isNameValid(certificateName)) {
             certificateCriteriaList.add(new PartMatchSearchCertificateCriteria(EntityFieldsName.NAME, certificateName));
         }
