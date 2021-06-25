@@ -1,21 +1,18 @@
 package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.constant.ErrorAttribute;
-import com.epam.esm.dao.constant.SqlGiftCertificateColumnName;
-import com.epam.esm.dao.constant.SqlTagColumnName;
 import com.epam.esm.dao.constant.Symbol;
-import com.epam.esm.dao.creator.criteria.Criteria;
-import com.epam.esm.dao.creator.criteria.search.FullMatchSearchCriteria;
-import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCriteria;
-import com.epam.esm.dao.creator.criteria.sort.FieldSortCriteria;
+import com.epam.esm.dao.creator.criteria.CertificateCriteria;
+import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCertificateCriteria;
+import com.epam.esm.dao.creator.criteria.sort.FieldSortCertificateCriteria;
 import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Tag;
 import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
-import com.epam.esm.validator.TagValidator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +129,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
         List<GiftCertificate> giftCertificates = dao.findAll(page, elements);
         if (CollectionUtils.isEmpty(giftCertificates)) {
             throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE + elements);
         }
         return giftCertificates;
     }
@@ -142,31 +139,31 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                                                                     String certificateName,
                                                                     String certificateDescription, String sortByName,
                                                                     String sortByDate) {
-        List<Criteria> criteriaList = new ArrayList<>(); //fixme
-        if (TagValidator.isNameValid(tagName)) {
-            criteriaList.add(new FullMatchSearchCriteria(SqlTagColumnName.TAG_NAME, tagName));
-        }
+        List<CertificateCriteria> certificateCriteriaList = new ArrayList<>(); //fixme
+        /*if (TagValidator.isNameValid(tagName)) {
+            certificateCriteriaList.add(new FullMatchSearchCertificateCriteria(SqlTagColumnName.TAG_NAME, tagName));
+        }*/
         if (isNameValid(certificateName)) {
-            criteriaList.add(new PartMatchSearchCriteria(SqlGiftCertificateColumnName.NAME, certificateName));
+            certificateCriteriaList.add(new PartMatchSearchCertificateCriteria(EntityFieldsName.NAME, certificateName));
         }
         if (isDescriptionValid(certificateDescription)) {
-            criteriaList.add(new PartMatchSearchCriteria(SqlGiftCertificateColumnName.DESCRIPTION, certificateDescription));
+            certificateCriteriaList.add(new PartMatchSearchCertificateCriteria(EntityFieldsName.DESCRIPTION, certificateDescription));
         }
         if (sortByName != null && !sortByName.isEmpty()) {
             String sortOrdering = sortByName.equalsIgnoreCase(ASC_SORT_ORDERING) ? ASC_SORT_ORDERING
                     : DESC_SORT_ORDERING;
-            criteriaList.add(new FieldSortCriteria(SqlGiftCertificateColumnName.NAME, sortOrdering));
+            certificateCriteriaList.add(new FieldSortCertificateCriteria(EntityFieldsName.NAME, sortOrdering));
         }
         if (sortByDate != null && !sortByDate.isEmpty()) {
             String sortOrdering = sortByDate.equalsIgnoreCase(ASC_SORT_ORDERING) ? ASC_SORT_ORDERING
                     : DESC_SORT_ORDERING;
-            criteriaList.add(new FieldSortCriteria(SqlGiftCertificateColumnName.CREATE_DATE, sortOrdering));
+            certificateCriteriaList.add(new FieldSortCertificateCriteria(EntityFieldsName.CREATE_DATE, sortOrdering));
         }
 
-        List<GiftCertificate> giftCertificates = dao.findWithTags(page, elements, criteriaList);
+        List<GiftCertificate> giftCertificates = dao.findWithTags(page, elements, certificateCriteriaList);
         if (CollectionUtils.isEmpty(giftCertificates)) {
             throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE + elements);
         }
         return giftCertificates;
     }

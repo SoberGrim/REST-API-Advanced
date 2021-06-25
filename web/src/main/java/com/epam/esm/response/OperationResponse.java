@@ -35,7 +35,7 @@ public class OperationResponse extends RepresentationModel<OperationResponse> {
     public OperationResponse(Operation operation, String messageKey, String detail) {
         this.operation = operation.getLocalizedOperationName();
         this.message = ResourceBundle.getBundle(ResponseAttribute.PROPERTY_FILE_NAME,
-                MessageLocale.getCurrent()).getString(messageKey) + Symbol.SPACE_SYMBOL + detail;
+                MessageLocale.getCurrent()).getString(messageKey) + Symbol.SPACE + detail;
     }
 
     public String getMessage() {

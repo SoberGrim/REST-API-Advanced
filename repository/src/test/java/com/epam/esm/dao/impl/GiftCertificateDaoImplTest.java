@@ -1,33 +1,17 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.config.DataSourceConfig;
-import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.constant.SqlTagColumnName;
-import com.epam.esm.dao.creator.SqlGiftCertificateQueryCreator;
-import com.epam.esm.dao.creator.criteria.Criteria;
-import com.epam.esm.dao.creator.criteria.search.FullMatchSearchCriteria;
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dto.GiftCertificate;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GiftCertificateDaoImplTest {
     /*private static final GiftCertificateDao<GiftCertificate> dao = new GiftCertificateDaoImpl
-            (DataSourceConfig.dataSource, new GiftCertificateMapper(), new SqlGiftCertificateQueryCreator());
+            (DataSourceConfig.dataSource, new GiftCertificateMapper(), new GiftCertificateQueryCreator());
 
     @Test
     public void findWithTagsTest() {
         List<GiftCertificate> expected = new ArrayList<>();
-        List<Criteria> criteriaList = new ArrayList<>();
-        criteriaList.add(new FullMatchSearchCriteria(SqlTagColumnName.TAG_NAME, "#longverylongtagname"));
+        List<CertificateCriteria> criteriaList = new ArrayList<>();
+        criteriaList.add(new FullMatchSearchCertificateCriteria(SqlTagColumnName.TAG_NAME, "#longverylongtagname"));
         List<GiftCertificate> actual = dao.findWithTags(criteriaList);
         assertEquals(expected, actual);
     }

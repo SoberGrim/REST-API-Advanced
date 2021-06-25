@@ -16,7 +16,7 @@ public class ResourceNotFoundExceptionsHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleRuntimeExceptions(ResourceNotFoundException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getLocalizedMessage(
-                MessageLocale.getCurrent()) + Symbol.SPACE_SYMBOL + e.getDetail(), e.getErrorCode());
+                MessageLocale.getCurrent()) + Symbol.SPACE + e.getDetail(), e.getErrorCode());
         exceptionResponse.setErrorCode(status.value() + e.getErrorCode());
         return new ResponseEntity<>(exceptionResponse, status);
     }

@@ -53,7 +53,7 @@ public class TagServiceImpl implements TagService<Tag> {
         List<Tag> tags = dao.findAll(page, elements);
         if (CollectionUtils.isEmpty(tags)) {
             throw new ResourceNotFoundException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR,
-                    page + Symbol.COMMA + Symbol.SPACE_SYMBOL + elements);
+                    page + Symbol.COMMA + Symbol.SPACE + elements);
         }
         return tags;
     }

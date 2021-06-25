@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.creator.criteria.Criteria;
+import com.epam.esm.dao.creator.criteria.CertificateCriteria;
 import com.epam.esm.dto.GiftCertificate;
 
 import java.util.List;
@@ -19,5 +19,5 @@ public interface GiftCertificateDao<T extends GiftCertificate> {
 
     List<T> findAll(int page, int elements);
 
-    List<T> findWithTags(int page, int elements, List<Criteria> criteriaList);
+    List<T> findWithTags(int page, int elements, List<CertificateCriteria> certificateCriteriaList);
 }
