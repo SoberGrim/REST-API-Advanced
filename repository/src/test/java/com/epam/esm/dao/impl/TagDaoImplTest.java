@@ -2,7 +2,6 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.config.DataSourceConfig;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.dto.Tag;
 import org.junit.jupiter.api.Test;
 

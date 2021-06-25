@@ -17,7 +17,7 @@ import java.util.List;
 public class UserController {
     private final UserService<User> service;
     private final Hateoas<User> hateoas;
-
+//fixme fix hateoas
     @Autowired
     public UserController(UserService<User> service, Hateoas<User> hateoas) {
         this.service = service;

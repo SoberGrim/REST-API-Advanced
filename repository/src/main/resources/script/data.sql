@@ -25,11 +25,11 @@ INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (4, 3, 3);
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (5, 4, 4);
 
-INSERT INTO users (first_name, last_name, email) VALUES('Alice','Green','alice@gmail.com');
-INSERT INTO users (first_name, last_name, email) VALUES('Marting','Grace','marting@gmail.com');
-INSERT INTO users (first_name, last_name, email) VALUES('David','Sky','david@gmail.com');
-INSERT INTO users (first_name, last_name, email) VALUES('Bob','Space','spacebob123@gmail.com');
-INSERT INTO users (first_name, last_name, email) VALUES('Rick','Sun','always_sun@gmail.com');
+INSERT INTO users (user_id, first_name, last_name, email) VALUES(1, 'Alice','Green','alice@gmail.com');
+INSERT INTO users (user_id, first_name, last_name, email) VALUES(2, 'Marting','Grace','marting@gmail.com');
+INSERT INTO users (user_id, first_name, last_name, email) VALUES(3, 'David','Sky','david@gmail.com');
+INSERT INTO users (user_id, first_name, last_name, email) VALUES(4, 'Bob','Space','spacebob123@gmail.com');
+INSERT INTO users (user_id, first_name, last_name, email) VALUES(5, 'Rick','Sun','always_sun@gmail.com');
 
 INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(1, 1, 1);
 INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(2, 1, 2);
