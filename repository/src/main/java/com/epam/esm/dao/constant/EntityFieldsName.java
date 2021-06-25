@@ -6,5 +6,8 @@ public class EntityFieldsName {
     public static final String DESCRIPTION = "description";
     public static final String CREATE_DATE = "createDate";
     public static final String TAGS = "tags";
+    public static final String GIFT_CERTIFICATES = "giftCertificates";
 
+    private EntityFieldsName() {
+    }
 }

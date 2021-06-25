@@ -24,3 +24,9 @@ INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (3, 3, 5);
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (4, 3, 3);
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (5, 4, 4);
+
+INSERT INTO users (first_name, last_name, email) VALUES('Alice','Green','alice@gmail.com');
+INSERT INTO users (first_name, last_name, email) VALUES('Marting','Grace','marting@gmail.com');
+INSERT INTO users (first_name, last_name, email) VALUES('David','Sky','david@gmail.com');
+INSERT INTO users (first_name, last_name, email) VALUES('Bob','Space','spacebob123@gmail.com');
+INSERT INTO users (first_name, last_name, email) VALUES('Rick','Sun','always_sun@gmail.com');
