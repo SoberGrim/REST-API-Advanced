@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.User;
+import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,28 +16,32 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService<User> service;
-    //todo hateoas
+    private final Hateoas<User> hateoas;
 
     @Autowired
-    public UserController(UserService<User> service) {
+    public UserController(UserService<User> service, Hateoas<User> hateoas) {
         this.service = service;
+        this.hateoas = hateoas;
     }
 
     @GetMapping("/{id}")
     public User findUserById(@PathVariable String id) {
         User user = service.findById(id);
+        hateoas.createHateoas(user);
         return user;
     }
 
     @GetMapping
     public List<User> findUsersWithCertificate(@RequestParam int page, @RequestParam int elements) {
         List<User> users = service.findWithGiftCertificates(page, elements);
+        users.forEach(hateoas::createHateoas);
         return users;
     }
 
     @GetMapping("/all")
     public List<User> findAllUsers(@RequestParam int page, @RequestParam int elements) {
         List<User> users = service.findAll(page, elements);
+        users.forEach(hateoas::createHateoas);
         return users;
     }
 }
