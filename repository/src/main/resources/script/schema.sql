@@ -35,10 +35,12 @@ CREATE TABLE users
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE users_gift_certificates
+CREATE TABLE orders
 (
-    user_gift_certificate_id bigint NOT NULL AUTO_INCREMENT,
+    order_id               bigint         NOT NULL AUTO_INCREMENT,
+    price                  decimal(10, 0) NOT NULL,
+    timestamp              datetime       NOT NULL,
+    gift_certificate_id_fk bigint         NOT NULL REFERENCES gift_certificates (gift_certificate_id),
     user_id_fk               bigint NOT NULL REFERENCES users (user_id),
-    gift_certificate_id_fk   bigint NOT NULL REFERENCES gift_certificates (gift_certificate_id),
-    PRIMARY KEY (user_gift_certificate_id)
+    PRIMARY KEY (order_id)
 );

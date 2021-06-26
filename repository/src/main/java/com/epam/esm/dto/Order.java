@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,9 +17,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,26 +31,23 @@ import java.util.Set;
 @ToString(exclude = {"id"})
 @EntityListeners(AuditListener.class)
 @Entity
-@Table(name = "users")
-public class User extends RepresentationModel<User> {
+@Table(name = "orders")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "order_id")
     @Setter(value = AccessLevel.NONE)
     private long id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "price")
+    private BigDecimal price;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
 
-    @Column(name = "email")
-    private String email;
-
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(
-            name = "user_id_fk"
+            name = "gift_certificate_id_fk"
     )
-    private Set<Order> orders;
+    private GiftCertificate giftCertificate;
 }

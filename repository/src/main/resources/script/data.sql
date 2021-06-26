@@ -31,8 +31,17 @@ INSERT INTO users (user_id, first_name, last_name, email) VALUES(3, 'David','Sky
 INSERT INTO users (user_id, first_name, last_name, email) VALUES(4, 'Bob','Space','spacebob123@gmail.com');
 INSERT INTO users (user_id, first_name, last_name, email) VALUES(5, 'Rick','Sun','always_sun@gmail.com');
 
-INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(1, 1, 1);
-INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(2, 1, 2);
-INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(3, 1, 3);
-INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(4, 3, 1);
-INSERT INTO users_gift_certificates(user_gift_certificate_id, user_id_fk, gift_certificate_id_fk) VALUES(5, 4, 1);
+INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
+VALUES(1, '99.99', '2012-10-10T11:10:11.111', 1, 1);
+
+INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
+VALUES(2, '99.99', '2021-06-26T16:10:11.111', 1, 1);
+
+INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
+VALUES(3, '99.99', '2019-12-31T23:59:59.111', 1, 1);
+
+INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
+VALUES(4, '2.35', '2011-11-19T11:10:11.111', 2, 3);
+
+INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
+VALUES(5, '1000', '2011-11-19T11:10:11.111', 3, 4);
