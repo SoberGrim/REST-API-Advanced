@@ -2,6 +2,8 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
+import com.epam.esm.dto.GiftCertificate;
+import com.epam.esm.dto.Order;
 import com.epam.esm.dto.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +59,23 @@ public class TagDaoImpl implements TagDao<Tag> {
 
     @Override
     public Optional<Tag> findMostUsedTagOfUserWithHighestCostOfAllOrders(long userId) {
-        return Optional.empty();
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Order> root = criteria.from(Order.class);
+
+        Join<GiftCertificate, Order> tagOrderJoin = root.join(EntityFieldsName.GIFT_CERTIFICATE)
+                .join(EntityFieldsName.TAGS);
+
+        criteria.select(root.get(EntityFieldsName.GIFT_CERTIFICATE).get(EntityFieldsName.TAGS))
+                .where(builder.equal(root.get(EntityFieldsName.USER).get(EntityFieldsName.ID), userId))
+                .groupBy(tagOrderJoin.get(EntityFieldsName.NAME))
+                .orderBy(builder.desc(builder.count(tagOrderJoin.get(EntityFieldsName.NAME))),
+                        builder.desc(builder.sum(root.get(EntityFieldsName.PRICE))));
+
+        Optional<Tag> tag = em.createQuery(criteria).getResultStream().findFirst();
+        em.close();
+        return tag;
     }
 
     @Override
