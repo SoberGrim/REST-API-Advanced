@@ -64,7 +64,7 @@ public class TagDaoImpl implements TagDao<Tag> {
         CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
         Root<Order> root = criteria.from(Order.class);
 
-        Join<GiftCertificate, Order> tagOrderJoin = root.join(EntityFieldsName.GIFT_CERTIFICATE)
+        Join<Tag, Order> tagOrderJoin = root.join(EntityFieldsName.GIFT_CERTIFICATE)
                 .join(EntityFieldsName.TAGS);
 
         criteria.select(root.get(EntityFieldsName.GIFT_CERTIFICATE).get(EntityFieldsName.TAGS))
