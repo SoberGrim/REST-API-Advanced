@@ -13,7 +13,9 @@ public class UserHateoas implements Hateoas<User> {
 
     @Override
     public void createHateoas(User user) {
-        user.add(linkTo(methodOn(UserController.class).findAllUsers(0, 0)).withSelfRel());
-        user.add(linkTo(methodOn(UserController.class).findUserById(String.valueOf(user.getId()))).withSelfRel());
+        if (user.getLinks().isEmpty()) {
+            user.add(linkTo(methodOn(UserController.class).findAllUsers(0, 0)).withSelfRel());
+            user.add(linkTo(methodOn(UserController.class).findUserById(String.valueOf(user.getId()))).withSelfRel());
+        }
     }
 }

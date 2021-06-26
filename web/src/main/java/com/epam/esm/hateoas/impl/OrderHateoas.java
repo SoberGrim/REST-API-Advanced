@@ -24,13 +24,20 @@ public class OrderHateoas implements Hateoas<Order> {
 
     @Override
     public void createHateoas(Order order) {
-        order.add(linkTo(methodOn(UserController.class).findUserOrders(String.valueOf(order.getUser().getId()),
-                0, 0)).withSelfRel());
+        if (order.getLinks().isEmpty()) {
+            order.add(linkTo(methodOn(UserController.class).findUserOrders(String.valueOf(order.getUser().getId()),
+                    0, 0)).withSelfRel());
 
-        order.add(linkTo(methodOn(UserController.class).findUserOrder(String.valueOf(order.getUser().getId()),
-                String.valueOf(order.getId()))).withSelfRel());
+            order.add(linkTo(methodOn(UserController.class).findUserOrder(String.valueOf(order.getUser().getId()),
+                    String.valueOf(order.getId()))).withSelfRel());
+        }
 
-        certificateHateoas.createHateoas(order.getGiftCertificate());
-        userHateoas.createHateoas(order.getUser());
+        if (order.getGiftCertificate().getLinks().isEmpty()) {
+            certificateHateoas.createHateoas(order.getGiftCertificate());
+        }
+
+        if (order.getUser().getLinks().isEmpty()) {
+            userHateoas.createHateoas(order.getUser());
+        }
     }
 }

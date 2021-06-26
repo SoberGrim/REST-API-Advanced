@@ -23,6 +23,7 @@ public class TagOperationResponseHateoas implements Hateoas<OperationResponse> {
     @Override
     public void createHateoas(OperationResponse response) {
         response.add(linkTo(methodOn(TagController.class).findAllTags(0, 0)).withSelfRel());
+
         if (operations.stream().anyMatch(o -> o.getLocalizedOperationName().equalsIgnoreCase(response.getOperation()))) {
             response.add(linkTo(methodOn(TagController.class).findTagById(findIdFromMessage(response.getMessage())))
                     .withSelfRel());

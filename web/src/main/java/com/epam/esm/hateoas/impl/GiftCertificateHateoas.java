@@ -21,12 +21,16 @@ public class GiftCertificateHateoas implements Hateoas<GiftCertificate> {
 
     @Override
     public void createHateoas(GiftCertificate certificate) {
-        certificate.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates(0, 0))
-                .withSelfRel());
+        if (certificate.getLinks().isEmpty()) {
+            certificate.add(linkTo(methodOn(GiftCertificateController.class).findAllGiftCertificates(0, 0))
+                    .withSelfRel());
 
-        certificate.add(linkTo(methodOn(GiftCertificateController.class).findCertificateById(
-                String.valueOf(certificate.getId()))).withSelfRel());
+            certificate.add(linkTo(methodOn(GiftCertificateController.class).findCertificateById(
+                    String.valueOf(certificate.getId()))).withSelfRel());
 
-        certificate.getTags().forEach(tagHateoas::createHateoas);
+            certificate.getTags().stream()
+                    .filter(t -> t.getLinks().isEmpty())
+                    .forEach(tagHateoas::createHateoas);
+        }
     }
 }

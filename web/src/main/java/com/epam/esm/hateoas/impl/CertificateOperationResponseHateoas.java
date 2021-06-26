@@ -1,10 +1,8 @@
 package com.epam.esm.hateoas.impl;
 
-import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.controller.GiftCertificateController;
 import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
-import com.epam.esm.util.MessageLocale;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ public class CertificateOperationResponseHateoas implements Hateoas<OperationRes
             response.add(linkTo(methodOn(GiftCertificateController.class).findCertificateById(findIdFromMessage(response
                     .getMessage()))).withSelfRel());
         }
-
     }
 
     private String findIdFromMessage(String message) {

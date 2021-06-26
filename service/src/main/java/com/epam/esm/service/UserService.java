@@ -8,6 +8,4 @@ public interface UserService<T extends User> {
     T findById(String id);
 
     List<T> findAll(int page, int elements);
-
-    List<T> findWithGiftCertificates(int page, int elements);
 }

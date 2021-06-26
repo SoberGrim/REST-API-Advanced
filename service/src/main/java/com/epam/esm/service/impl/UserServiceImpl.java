@@ -41,14 +41,4 @@ public class UserServiceImpl implements UserService<User> {
         }
         return users;
     }
-
-    @Override
-    public List<User> findWithGiftCertificates(int page, int elements) {
-        List<User> users = dao.findWithGiftCertificates(page, elements);
-        if (CollectionUtils.isEmpty(users)) {
-            throw new ResourceNotFoundException(ErrorAttribute.USER_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR,
-                    page + Symbol.COMMA + Symbol.SPACE + elements);
-        }
-        return users;
-    }
 }

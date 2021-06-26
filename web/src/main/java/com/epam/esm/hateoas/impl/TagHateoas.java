@@ -12,7 +12,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class TagHateoas implements Hateoas<Tag> {
     @Override
     public void createHateoas(Tag tag) {
-        tag.add(linkTo(methodOn(TagController.class).findAllTags(0, 0)).withSelfRel());
-        tag.add(linkTo(methodOn(TagController.class).findTagById(String.valueOf(tag.getId()))).withSelfRel());
+        if (tag.getLinks().isEmpty()) {
+            tag.add(linkTo(methodOn(TagController.class).findAllTags(0, 0)).withSelfRel());
+            tag.add(linkTo(methodOn(TagController.class).findTagById(String.valueOf(tag.getId()))).withSelfRel());
+        }
     }
 }

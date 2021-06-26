@@ -8,6 +8,7 @@ import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +25,17 @@ public class UserController {
     private final OrderService<Order> orderService;
     private final Hateoas<User> userHateoas;
     private final Hateoas<Order> orderHateoas;
+    private final Hateoas<OperationResponse> responseHateoas;
 
     @Autowired
     public UserController(UserService<User> userService, OrderService<Order> orderService, Hateoas<User> userHateoas,
-                          Hateoas<Order> orderHateoas) {
+                          Hateoas<Order> orderHateoas, @Qualifier("orderOperationResponseHateoas")
+                                  Hateoas<OperationResponse> responseHateoas) {
         this.userService = userService;
         this.orderService = orderService;
         this.userHateoas = userHateoas;
         this.orderHateoas = orderHateoas;
+        this.responseHateoas = responseHateoas;
     }
 
     @GetMapping("/{id}")
@@ -42,13 +46,6 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> findUsersWithCertificates(@RequestParam int page, @RequestParam int elements) {
-        List<User> users = userService.findWithGiftCertificates(page, elements);
-        users.forEach(userHateoas::createHateoas);
-        return users;
-    }
-
-    @GetMapping("/all")
     public List<User> findAllUsers(@RequestParam int page, @RequestParam int elements) {
         List<User> users = userService.findAll(page, elements);
         users.forEach(userHateoas::createHateoas);
@@ -60,7 +57,7 @@ public class UserController {
         OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
                 ResponseAttribute.ORDER_CREATE_OPERATION, String.valueOf(orderService.createOrder(userId,
                 certificateId)));
-        //responseHateoas.createHateoas(response);
+        responseHateoas.createHateoas(response);
         return response;
     }
 
