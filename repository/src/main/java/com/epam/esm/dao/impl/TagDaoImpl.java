@@ -2,7 +2,6 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
-import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Order;
 import com.epam.esm.dto.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
