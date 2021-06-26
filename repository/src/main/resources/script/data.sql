@@ -20,9 +20,9 @@ INSERT INTO gift_certificates (gift_certificate_id, certificate_name, descriptio
 VALUES(5, 'Ferry', 'Ferryman', '0.99', 14, '2019-11-19T11:10:11.111');
 
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (1, 1, 1);
-INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (2, 1, 2);
-INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (3, 3, 5);
-INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (4, 3, 3);
+INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (2, 4, 4);
+INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (3, 2, 1);
+INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (4, 2, 2);
 INSERT INTO gift_certificates_tags (gift_certificate_tag_id, gift_certificate_id_fk, tag_id_fk) VALUES (5, 4, 4);
 
 INSERT INTO users (user_id, first_name, last_name, email) VALUES(1, 'Alice','Green','alice@gmail.com');
@@ -35,10 +35,10 @@ INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_
 VALUES(1, '99.99', '2012-10-10T11:10:11.111', 1, 1);
 
 INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
-VALUES(2, '99.99', '2021-06-26T16:10:11.111', 1, 1);
+VALUES(2, '99.99', '2021-06-26T16:10:11.111', 1, 2);
 
 INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
-VALUES(3, '99.99', '2019-12-31T23:59:59.111', 1, 1);
+VALUES(3, '99.99', '2019-12-31T23:59:59.111', 1, 4);
 
 INSERT INTO orders (order_id, price, timestamp, gift_certificate_id_fk, user_id_fk)
 VALUES(4, '2.35', '2011-11-19T11:10:11.111', 2, 3);

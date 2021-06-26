@@ -12,6 +12,8 @@ public interface TagDao<T extends Tag> {
 
     Optional<T> findByName(String name);
 
+    Optional<T> findMostUsedTagOfUserWithHighestCostOfAllOrders(long userId);
+
     List<T> findAll(int page, int elements);
 
     boolean delete(long id);

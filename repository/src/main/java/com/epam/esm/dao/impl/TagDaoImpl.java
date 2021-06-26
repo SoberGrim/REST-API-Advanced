@@ -55,6 +55,11 @@ public class TagDaoImpl implements TagDao<Tag> {
     }
 
     @Override
+    public Optional<Tag> findMostUsedTagOfUserWithHighestCostOfAllOrders(long userId) {
+        return Optional.empty();
+    }
+
+    @Override
     public List<Tag> findAll(int page, int elements) {
         EntityManager em = factory.createEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();

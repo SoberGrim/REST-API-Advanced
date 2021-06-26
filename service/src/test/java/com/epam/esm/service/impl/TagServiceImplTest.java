@@ -22,11 +22,11 @@ public class TagServiceImplTest {
     private TagDao<Tag> dao;
 
 
-    @BeforeAll
+    /*@BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
         service = new TagServiceImpl(dao);
-    }
+    }*/
 
     /*@Test
     public void insertTest() {

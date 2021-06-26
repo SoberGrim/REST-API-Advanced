@@ -11,6 +11,8 @@ public interface TagService<T extends Tag> {
 
     T findByName(String name);
 
+    T findMostUsedTagOfUserWithHighestCostOfAllOrders(String userId);
+
     List<T> findAll(int page, int elements);
 
     boolean delete(String id);

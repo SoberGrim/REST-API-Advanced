@@ -3,10 +3,12 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dao.constant.ErrorAttribute;
 import com.epam.esm.dto.Tag;
+import com.epam.esm.dto.User;
 import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceDuplicateException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.UserService;
 import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,12 @@ import static com.epam.esm.validator.TagValidator.isNameValid;
 @Service
 public class TagServiceImpl implements TagService<Tag> {
     private final TagDao<Tag> dao;
+    private final UserService<User> userService;
 
     @Autowired
-    public TagServiceImpl(TagDao<Tag> dao) {
+    public TagServiceImpl(TagDao<Tag> dao, UserService<User> userService) {
         this.dao = dao;
+        this.userService = userService;
     }
 
     @Override
@@ -55,6 +59,13 @@ public class TagServiceImpl implements TagService<Tag> {
         } else {
             throw new InvalidFieldException(ErrorAttribute.TAG_ERROR_CODE, ErrorAttribute.INVALID_TAG_NAME, name);
         }
+    }
+
+    @Override
+    public Tag findMostUsedTagOfUserWithHighestCostOfAllOrders(String userId) {
+        return dao.findMostUsedTagOfUserWithHighestCostOfAllOrders(userService.findById(userId).getId()).orElseThrow(
+                () -> new ResourceNotFoundException(ErrorAttribute.TAG_ERROR_CODE,
+                        ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, userId));
     }
 
     @Override

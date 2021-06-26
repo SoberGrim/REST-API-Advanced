@@ -2,10 +2,12 @@ package com.epam.esm.controller;
 
 import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.dto.Order;
+import com.epam.esm.dto.Tag;
 import com.epam.esm.dto.User;
 import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.OrderService;
+import com.epam.esm.service.TagService;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,18 +25,22 @@ import java.util.List;
 public class UserController {
     private final UserService<User> userService;
     private final OrderService<Order> orderService;
+    private final TagService<Tag> tagService;
     private final Hateoas<User> userHateoas;
     private final Hateoas<Order> orderHateoas;
+    private final Hateoas<Tag> tagHateoas;
     private final Hateoas<OperationResponse> responseHateoas;
 
     @Autowired
-    public UserController(UserService<User> userService, OrderService<Order> orderService, Hateoas<User> userHateoas,
-                          Hateoas<Order> orderHateoas, @Qualifier("orderOperationResponseHateoas")
-                                  Hateoas<OperationResponse> responseHateoas) {
+    public UserController(UserService<User> userService, OrderService<Order> orderService, TagService<Tag> tagService,
+                          Hateoas<User> userHateoas, Hateoas<Order> orderHateoas, Hateoas<Tag> tagHateoas,
+                          @Qualifier("orderOperationResponseHateoas") Hateoas<OperationResponse> responseHateoas) {
         this.userService = userService;
         this.orderService = orderService;
+        this.tagService = tagService;
         this.userHateoas = userHateoas;
         this.orderHateoas = orderHateoas;
+        this.tagHateoas = tagHateoas;
         this.responseHateoas = responseHateoas;
     }
 
@@ -73,5 +79,12 @@ public class UserController {
         Order order = orderService.findByUserIdAndOrderId(userId, orderId);
         orderHateoas.createHateoas(order);
         return order;
+    }
+
+    @GetMapping("/{userId}/orders/tags/popular")
+    public Tag findMostUsedTagOfUserWithHighestCostOfAllOrders(@PathVariable String userId) {
+        Tag tag = tagService.findMostUsedTagOfUserWithHighestCostOfAllOrders(userId);
+        tagHateoas.createHateoas(tag);
+        return tag;
     }
 }
