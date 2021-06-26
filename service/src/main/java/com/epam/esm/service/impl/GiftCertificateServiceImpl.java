@@ -3,7 +3,6 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.constant.ErrorAttribute;
-import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dao.creator.criteria.search.FullMatchSearchCertificateCriteria;
 import com.epam.esm.dao.creator.criteria.search.PartMatchSearchCertificateCriteria;
@@ -130,12 +129,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
 
     @Override
     public List<GiftCertificate> findAll(int page, int elements) {
-        List<GiftCertificate> giftCertificates = dao.findAll(page, elements);
-        if (CollectionUtils.isEmpty(giftCertificates)) {
-            throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE + elements);
-        }
-        return giftCertificates;
+        return dao.findAll(page, elements);
     }
 
     @Override
@@ -165,13 +159,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                     : DESC_SORT_ORDERING;
             certificateCriteriaList.add(new FieldSortCertificateCriteria(EntityFieldsName.CREATE_DATE, sortOrdering));
         }
-
-        List<GiftCertificate> giftCertificates = dao.findWithTags(page, elements, certificateCriteriaList);
-        if (CollectionUtils.isEmpty(giftCertificates)) {
-            throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                    ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, page + Symbol.COMMA + Symbol.SPACE + elements);
-        }
-        return giftCertificates;
+        return dao.findWithTags(page, elements, certificateCriteriaList);
     }
 
     private boolean updateCertificateFields(GiftCertificate oldCertificate, GiftCertificate newCertificate) {

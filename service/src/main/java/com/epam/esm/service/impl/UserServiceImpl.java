@@ -2,12 +2,10 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.dao.UserDao;
 import com.epam.esm.dao.constant.ErrorAttribute;
-import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dto.User;
 import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.UserService;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +32,6 @@ public class UserServiceImpl implements UserService<User> {
 
     @Override
     public List<User> findAll(int page, int elements) {
-        List<User> users = dao.findAll(page, elements);
-        if (CollectionUtils.isEmpty(users)) {
-            throw new ResourceNotFoundException(ErrorAttribute.USER_ERROR_CODE, ErrorAttribute.RESOURCE_NOT_FOUND_ERROR,
-                    page + Symbol.COMMA + Symbol.SPACE + elements);
-        }
-        return users;
+        return dao.findAll(page, elements);
     }
 }
