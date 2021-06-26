@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDao<User> {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = builder.createQuery(User.class);
         Root<User> root = criteria.from(User.class);
-        criteria.where(builder.isNotEmpty(root.get(EntityFieldsName.GIFT_CERTIFICATES)));
+        criteria.where(builder.isNotEmpty(root.get(EntityFieldsName.ORDERS)));
         List<User> users = (page > 0 && elements > 0) ? em.createQuery(criteria).setMaxResults(elements)
                 .setFirstResult(elements * (page - 1)).getResultList() : em.createQuery(criteria).getResultList();
         em.close();
