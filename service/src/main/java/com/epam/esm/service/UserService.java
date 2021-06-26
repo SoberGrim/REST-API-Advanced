@@ -10,4 +10,6 @@ public interface UserService<T extends User> {
     List<T> findAll(int page, int elements);
 
     List<T> findWithGiftCertificates(int page, int elements);
+
+    long createOrder(String userId, String certificateId);
 }

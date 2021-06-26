@@ -11,6 +11,7 @@ public class ErrorAttribute {
     public static final String TAG_DUPLICATE_ERROR = "error.tagDuplicate";
     public static final String USER_ERROR_CODE = "3";
     public static final String INVALID_USER_ID_ERROR = "error.invalidUserId";
+    public static final String INVALID_ID = "error.invalidId";
     public static final String RESOURCE_NOT_FOUND_ERROR = "error.resourceNotFound";
 
     private ErrorAttribute() {

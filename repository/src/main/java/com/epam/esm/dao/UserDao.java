@@ -11,4 +11,6 @@ public interface UserDao<T extends User> {
     List<T> findAll(int page, int elements);
 
     List<T> findWithGiftCertificates(int page, int elements);
+
+    boolean update(T t);
 }

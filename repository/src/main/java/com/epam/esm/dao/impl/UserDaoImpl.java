@@ -56,4 +56,14 @@ public class UserDaoImpl implements UserDao<User> {
         em.close();
         return users;
     }
+
+    @Override
+    public boolean update(User user) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.merge(user);
+        em.getTransaction().commit();
+        em.close();
+        return true;
+    }
 }

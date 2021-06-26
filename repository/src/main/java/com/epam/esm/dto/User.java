@@ -13,14 +13,10 @@ import org.springframework.hateoas.RepresentationModel;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,10 +42,4 @@ public class User extends RepresentationModel<User> {
 
     @Column(name = "email")
     private String email;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "user_id_fk"
-    )
-    private Set<Order> orders;
 }

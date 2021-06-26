@@ -1,11 +1,17 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.attribute.ResponseAttribute;
+import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.User;
 import com.epam.esm.hateoas.Hateoas;
+import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +49,13 @@ public class UserController {
         List<User> users = service.findAll(page, elements);
         users.forEach(userHateoas::createHateoas);
         return users;
+    }
+
+    @PatchMapping("/{userId}/order/new/{certificateId}")
+    public OperationResponse createOrder(@PathVariable String userId, @PathVariable String certificateId) {
+        OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
+                ResponseAttribute.ORDER_CREATE_OPERATION, String.valueOf(service.createOrder(userId, certificateId)));
+        //responseHateoas.createHateoas(response);
+        return response;
     }
 }
