@@ -11,6 +11,9 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
+/**
+ * The type Data source configuration.
+ */
 @Configuration
 public class DataSourceConfiguration {
     private static final String DATABASE_DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
@@ -23,11 +26,21 @@ public class DataSourceConfiguration {
 
     private Environment environment;
 
+    /**
+     * Sets environment.
+     *
+     * @param environment the environment
+     */
     @Autowired
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
 
+    /**
+     * Data source data source.
+     *
+     * @return the data source
+     */
     @Profile("prod")
     @Bean
     public DataSource dataSource() {
@@ -40,6 +53,11 @@ public class DataSourceConfiguration {
         return dataSource;
     }
 
+    /**
+     * Embedded data source data source.
+     *
+     * @return the data source
+     */
     @Profile("dev")
     @Bean
     public DataSource embeddedDataSource() {

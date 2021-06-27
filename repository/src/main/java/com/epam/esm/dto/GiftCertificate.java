@@ -26,6 +26,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+/**
+ * The type Gift certificate.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

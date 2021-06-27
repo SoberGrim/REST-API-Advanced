@@ -19,11 +19,20 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Gift certificate dao.
+ */
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificate> {
     private final QueryCreator<GiftCertificate> criteriaCreator;
     private final EntityManagerFactory factory;
 
+    /**
+     * Instantiates a new Gift certificate dao.
+     *
+     * @param criteriaCreator the criteria creator
+     * @param factory         the factory
+     */
     @Autowired
     public GiftCertificateDaoImpl(QueryCreator<GiftCertificate> criteriaCreator, EntityManagerFactory factory) {
         this.criteriaCreator = criteriaCreator;

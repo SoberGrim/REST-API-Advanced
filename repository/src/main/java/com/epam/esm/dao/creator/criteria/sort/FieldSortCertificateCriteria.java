@@ -7,9 +7,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
+/**
+ * The type Field sort certificate criteria.
+ */
 public class FieldSortCertificateCriteria extends SortCertificateCriteria {
     private static final String SORT_ASC = "ASC";
 
+    /**
+     * Instantiates a new Field sort certificate criteria.
+     *
+     * @param fieldName    the field name
+     * @param sortOrdering the sort ordering
+     */
     public FieldSortCertificateCriteria(String fieldName, String sortOrdering) {
         super(fieldName, sortOrdering);
     }

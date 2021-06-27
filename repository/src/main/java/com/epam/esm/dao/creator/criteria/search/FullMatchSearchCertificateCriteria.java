@@ -14,12 +14,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * The type Full match search certificate criteria.
+ */
 public class FullMatchSearchCertificateCriteria extends SearchCertificateCriteria {
 
+    /**
+     * Instantiates a new Full match search certificate criteria.
+     *
+     * @param columnName the column name
+     * @param value      the value
+     */
     public FullMatchSearchCertificateCriteria(String columnName, String value) {
         super(columnName, value);
     }
 
+    /**
+     * Instantiates a new Full match search certificate criteria.
+     *
+     * @param tags the tags
+     */
     public FullMatchSearchCertificateCriteria(List<Tag> tags) {
         super(tags);
     }

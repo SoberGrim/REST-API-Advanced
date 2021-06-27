@@ -13,10 +13,18 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type User dao.
+ */
 @Repository
 public class UserDaoImpl implements UserDao<User> {
     private final EntityManagerFactory factory;
 
+    /**
+     * Instantiates a new User dao.
+     *
+     * @param factory the factory
+     */
     @Autowired
     public UserDaoImpl(EntityManagerFactory factory) {
         this.factory = factory;

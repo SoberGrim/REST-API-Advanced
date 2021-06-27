@@ -17,10 +17,18 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Order dao.
+ */
 @Repository
 public class OrderDaoImpl implements OrderDao<Order> {
     private final EntityManagerFactory factory;
 
+    /**
+     * Instantiates a new Order dao.
+     *
+     * @param factory the factory
+     */
     @Autowired
     public OrderDaoImpl(EntityManagerFactory factory) {
         this.factory = factory;

@@ -12,6 +12,9 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The type Gift certificate query creator.
+ */
 @Component
 public class GiftCertificateQueryCreator implements QueryCreator<GiftCertificate> {
     @Override

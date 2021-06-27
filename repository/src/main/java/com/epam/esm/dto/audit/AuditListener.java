@@ -8,6 +8,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
+/**
+ * The type Audit listener.
+ */
 @Component
 @Log4j2
 public class AuditListener {
@@ -21,6 +24,11 @@ public class AuditListener {
         log.log(Level.INFO, "update object: " + object);
     }
 
+    /**
+     * On pre remove.
+     *
+     * @param object the object
+     */
     @PreRemove
     public void onPreRemove(Object object) {
         log.log(Level.INFO, "remove object: " + object);

@@ -23,7 +23,9 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
+/**
+ * The type Order.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

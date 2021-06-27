@@ -17,10 +17,18 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Tag dao.
+ */
 @Repository
 public class TagDaoImpl implements TagDao<Tag> {
     private final EntityManagerFactory factory;
 
+    /**
+     * Instantiates a new Tag dao.
+     *
+     * @param factory the factory
+     */
     @Autowired
     public TagDaoImpl(EntityManagerFactory factory) {
         this.factory = factory;

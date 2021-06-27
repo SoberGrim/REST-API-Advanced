@@ -16,6 +16,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * The type User dao impl test.
+ */
 @DirtiesContext
 @ContextConfiguration(classes = {UserDaoImpl.class, EntityManagerFactoryConfiguration.class},
         loader = AnnotationConfigContextLoader.class)
@@ -25,6 +28,9 @@ public class UserDaoImplTest {
     @Autowired
     private UserDao<User> dao;
 
+    /**
+     * Find by id test.
+     */
     @Test
     public void findByIdTest() {
         Optional<User> expected = Optional.of(new User(1, "Alice", "Green", "alice@gmail.com"));
@@ -32,6 +38,9 @@ public class UserDaoImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Find all test.
+     */
     @Test
     public void findAllTest() {
         List<User> expected = new ArrayList<>();
