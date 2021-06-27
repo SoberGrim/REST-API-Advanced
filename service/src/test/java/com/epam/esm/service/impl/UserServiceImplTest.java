@@ -17,9 +17,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserServiceTest {
+public class UserServiceImplTest {
     @InjectMocks
-    public UserServiceImpl service;
+    private UserServiceImpl service;
 
     @Mock
     private UserDao<User> dao;
