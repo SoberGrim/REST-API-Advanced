@@ -5,6 +5,7 @@ import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Order;
 import com.epam.esm.dto.Tag;
 import com.epam.esm.dto.User;
+import com.epam.esm.exception.DeleteCertificateInUseException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,11 +18,13 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OrderServiceImplTest {
@@ -61,7 +64,7 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void findById() {
+    public void findByIdTest() {
         Order expected = new Order();
         expected.setPrice(BigDecimal.TEN);
         expected.setUser(new User(1, "Alice", "Green", "alice@gmail.com"));
@@ -78,5 +81,29 @@ public class OrderServiceImplTest {
 
         Order actual = orderService.findById("11");
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void deleteByCertificateIdTest() {
+        Order order = new Order();
+        order.setPrice(BigDecimal.TEN);
+        order.setUser(new User(1, "Alice", "Green", "alice@gmail.com"));
+        order.setTimestamp(LocalDateTime.now());
+
+        Set<Tag> tags = new HashSet<>();
+        tags.add(new Tag(3, "#warm"));
+
+        GiftCertificate certificate = new GiftCertificate(5, "Ferry", "Ferryman",
+                BigDecimal.valueOf(0.99), 26, LocalDateTime.of(2021, 6, 26, 11,
+                10, 11, 111000000), null, tags);
+        order.setGiftCertificate(certificate);
+
+        Mockito.when(certificateService.findById(Mockito.anyString()))
+                .thenReturn(certificate);
+
+        Mockito.when(dao.findByCertificateId(Mockito.anyLong()))
+                .thenReturn(Collections.singletonList(order));
+
+        assertThrows(DeleteCertificateInUseException.class, () -> orderService.deleteByCertificateId("1"));
     }
 }
