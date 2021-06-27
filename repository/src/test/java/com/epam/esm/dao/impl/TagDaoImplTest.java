@@ -4,12 +4,10 @@ import com.epam.esm.config.EntityManagerFactoryConfiguration;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.util.Optional;
@@ -17,11 +15,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TagDaoImpl.class, EntityManagerFactoryConfiguration.class}, loader = AnnotationConfigContextLoader.class)
+@DirtiesContext
+@ContextConfiguration(classes = {TagDaoImpl.class, EntityManagerFactoryConfiguration.class},
+        loader = AnnotationConfigContextLoader.class)
 @SpringBootTest
 public class TagDaoImplTest {
-    
+
     @Autowired
     private TagDao<Tag> dao;
 
