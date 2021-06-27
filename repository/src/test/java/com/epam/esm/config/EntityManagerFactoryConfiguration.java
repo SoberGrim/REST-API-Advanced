@@ -11,7 +11,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import javax.sql.DataSource;
 
 @TestConfiguration
-public class DataSourceTestConfiguration {
+public class EntityManagerFactoryConfiguration {
     private static final String CREATE_DATABASE_SCRIPT = "classpath:script/schema.sql";
     private static final String FILL_DATABASE_WITH_DATA_SCRIPT = "classpath:script/data.sql";
     private static final String PACKAGE_TO_SCAN = "com.epam.esm";
