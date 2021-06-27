@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +115,26 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                     ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
         return true;
+    }
+
+    @Override
+    public boolean disconnectTags(String id) {
+        return false;
+    }
+
+    @Override
+    public void disconnectTagById(String tagId) {
+        Tag tag = tagService.findById(tagId);
+        List<GiftCertificate> certificatesWithSuchTag = findCertificatesWithTagsByCriteria(0, 0,
+                Collections.singletonList(tag.getName()), null, null, null, null);
+        if (!CollectionUtils.isEmpty(certificatesWithSuchTag)) {
+            for (GiftCertificate certificate : certificatesWithSuchTag) {
+                Set<Tag> updatedTags = certificate.getTags();
+                updatedTags.remove(tag);
+                certificate.setTags(updatedTags);
+                dao.update(certificate);
+            }
+        }
     }
 
     @Override
