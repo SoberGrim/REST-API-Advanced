@@ -5,6 +5,7 @@ public class ErrorAttribute {
     public static final String GIFT_CERTIFICATE_ERROR_CODE = "1";
     public static final String INVALID_GIFT_CERTIFICATE_ERROR = "error.invalidGiftCertificate";
     public static final String INVALID_GIFT_CERTIFICATE_ID_ERROR = "error.invalidGiftCertificateId";
+    public static final String CERTIFICATE_IN_USE_ERROR = "error.deleteCertificateInUse";
     public static final String TAG_ERROR_CODE = "2";
     public static final String INVALID_TAG_ID_ERROR = "error.invalidTagId";
     public static final String INVALID_TAG_NAME = "error.invalidTagName";

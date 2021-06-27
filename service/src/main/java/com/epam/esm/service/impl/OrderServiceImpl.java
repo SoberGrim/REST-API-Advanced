@@ -6,6 +6,7 @@ import com.epam.esm.dao.constant.Symbol;
 import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Order;
 import com.epam.esm.dto.User;
+import com.epam.esm.exception.DeleteCertificateInUseException;
 import com.epam.esm.exception.InvalidFieldException;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
@@ -75,7 +76,8 @@ public class OrderServiceImpl implements OrderService<Order> {
                 CollectionUtils.isEmpty(dao.findByCertificateId(certificate.getId()))) {
             return dao.deleteByCertificateId(certificate.getId());
         }
-        throw new RuntimeException("certificate is in use");//todo write exception
+        throw new DeleteCertificateInUseException(ErrorAttribute.ORDER_ERROR_CODE,
+                ErrorAttribute.CERTIFICATE_IN_USE_ERROR, certificateId);
     }
 
     private Order createOrder(GiftCertificate certificate) {
