@@ -11,10 +11,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The type User service.
+ */
 @Service
 public class UserServiceImpl implements UserService<User> {
     private final UserDao<User> dao;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param dao the dao
+     */
     @Autowired
     public UserServiceImpl(UserDao<User> dao) {
         this.dao = dao;

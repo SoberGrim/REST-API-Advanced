@@ -17,11 +17,20 @@ import java.util.List;
 
 import static com.epam.esm.validator.TagValidator.isNameValid;
 
+/**
+ * The type Tag service.
+ */
 @Service
 public class TagServiceImpl implements TagService<Tag> {
     private final TagDao<Tag> dao;
     private final UserService<User> userService;
 
+    /**
+     * Instantiates a new Tag service.
+     *
+     * @param dao         the dao
+     * @param userService the user service
+     */
     @Autowired
     public TagServiceImpl(TagDao<Tag> dao, UserService<User> userService) {
         this.dao = dao;

@@ -16,6 +16,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * The type User service impl test.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceImplTest {
     @InjectMocks
@@ -24,11 +27,17 @@ public class UserServiceImplTest {
     @Mock
     private UserDao<User> dao;
 
+    /**
+     * Init.
+     */
     @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Find by id.
+     */
     @Test
     public void findById() {
         User expected = new User(1, "Alice", "Green", "alice@gmail.com");
@@ -38,6 +47,9 @@ public class UserServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Find all test.
+     */
     @Test
     public void findAllTest() {
         List<User> expected = new ArrayList<>();

@@ -15,6 +15,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * The type Tag service impl test.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TagServiceImplTest {
     @InjectMocks
@@ -23,11 +26,17 @@ public class TagServiceImplTest {
     @Mock
     private TagDao<Tag> dao;
 
+    /**
+     * Init.
+     */
     @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Insert test.
+     */
     @Test
     public void insertTest() {
         long expected = 11;
@@ -38,6 +47,9 @@ public class TagServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Delete test.
+     */
     @Test
     public void deleteTest() {
         Mockito.when(dao.delete(Mockito.anyLong())).thenReturn(true);
@@ -45,6 +57,9 @@ public class TagServiceImplTest {
         assertTrue(actual);
     }
 
+    /**
+     * Find by id test.
+     */
     @Test
     public void findByIdTest() {
         Tag expected = new Tag("#cool");

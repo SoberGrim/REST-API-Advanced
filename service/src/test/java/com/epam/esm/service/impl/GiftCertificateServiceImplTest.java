@@ -21,6 +21,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * The type Gift certificate service impl test.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GiftCertificateServiceImplTest {
     private static GiftCertificate giftCertificate;
@@ -31,6 +34,9 @@ public class GiftCertificateServiceImplTest {
     @Mock
     private GiftCertificateDao<GiftCertificate> dao;
 
+    /**
+     * Init.
+     */
     @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -40,6 +46,9 @@ public class GiftCertificateServiceImplTest {
                 null, new HashSet<>());
     }
 
+    /**
+     * Find all test.
+     */
     @Test
     public void findAllTest() {
         List<GiftCertificate> expected = new ArrayList<>();
@@ -49,6 +58,9 @@ public class GiftCertificateServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Find by id test.
+     */
     @Test
     public void findByIdTest() {
         GiftCertificate expected = giftCertificate;
@@ -57,6 +69,9 @@ public class GiftCertificateServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Insert test.
+     */
     @Test()
     public void insertTest() {
         assertThrows(InvalidFieldException.class, () -> service.insert(giftCertificate));

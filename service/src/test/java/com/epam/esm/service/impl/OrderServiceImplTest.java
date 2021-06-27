@@ -26,8 +26,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * The type Order service impl test.
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class OrderServiceImplTest {
+    /**
+     * The Order service.
+     */
     @InjectMocks
     public OrderServiceImpl orderService;
 
@@ -40,11 +46,17 @@ public class OrderServiceImplTest {
     @Mock
     private GiftCertificateService<GiftCertificate> certificateService;
 
+    /**
+     * Init.
+     */
     @BeforeAll
     public void init() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Create order test.
+     */
     @Test
     public void createOrderTest() {
         long expected = 11;
@@ -63,6 +75,9 @@ public class OrderServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Find by id test.
+     */
     @Test
     public void findByIdTest() {
         Order expected = new Order();
@@ -83,6 +98,9 @@ public class OrderServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    /**
+     * Delete by certificate id test.
+     */
     @Test
     public void deleteByCertificateIdTest() {
         Order order = new Order();

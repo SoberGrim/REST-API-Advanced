@@ -19,12 +19,22 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The type Order service.
+ */
 @Service
 public class OrderServiceImpl implements OrderService<Order> {
     private final OrderDao<Order> dao;
     private final UserService<User> userService;
     private final GiftCertificateService<GiftCertificate> certificateService;
 
+    /**
+     * Instantiates a new Order service.
+     *
+     * @param dao                the dao
+     * @param userService        the user service
+     * @param certificateService the certificate service
+     */
     @Autowired
     public OrderServiceImpl(OrderDao<Order> dao, UserService<User> userService,
                             GiftCertificateService<GiftCertificate> certificateService) {
