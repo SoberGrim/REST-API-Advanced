@@ -11,6 +11,10 @@ public interface OrderDao<T extends Order> {
 
     List<T> findByUserId(int page, int elements, User user);
 
+    boolean deleteByCertificateId(long certificateId);
+
+    List<T> findByCertificateId(long certificateId);
+
     Optional<T> findById(long id);
 
     Optional<T> findByUserIdAndOrderId(long certificateId, long orderId);

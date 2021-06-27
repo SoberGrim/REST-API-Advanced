@@ -11,8 +11,6 @@ public interface GiftCertificateService<T extends GiftCertificate> {
 
     boolean update(String id, GiftCertificate giftCertificate);
 
-    boolean disconnectTags(String id);
-
     void disconnectTagById(String tagId);
 
     T findById(String id);

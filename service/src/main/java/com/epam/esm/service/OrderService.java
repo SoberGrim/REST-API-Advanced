@@ -12,4 +12,6 @@ public interface OrderService<T extends Order> {
     T findByUserIdAndOrderId(String userId, String orderId);
 
     T findById(String id);
+
+    boolean deleteByCertificateId(String certificateId);
 }

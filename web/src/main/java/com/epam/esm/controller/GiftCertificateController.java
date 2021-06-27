@@ -2,9 +2,11 @@ package com.epam.esm.controller;
 
 import com.epam.esm.attribute.ResponseAttribute;
 import com.epam.esm.dto.GiftCertificate;
+import com.epam.esm.dto.Order;
 import com.epam.esm.hateoas.Hateoas;
 import com.epam.esm.response.OperationResponse;
 import com.epam.esm.service.GiftCertificateService;
+import com.epam.esm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,22 +24,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/certificates")
 public class GiftCertificateController {
-    private final GiftCertificateService<GiftCertificate> service;
+    private final GiftCertificateService<GiftCertificate> certificateService;
+    private final OrderService<Order> orderService;
     private final Hateoas<GiftCertificate> certificateHateoas;
     private final Hateoas<OperationResponse> responseHateoas;
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService<GiftCertificate> service, Hateoas<GiftCertificate>
-            certificateHateoas, @Qualifier("certificateOperationResponseHateoas") Hateoas<OperationResponse>
-                                             responseHateoas) {
-        this.service = service;
+    public GiftCertificateController(GiftCertificateService<GiftCertificate> certificateService, OrderService<Order>
+            orderService, Hateoas<GiftCertificate> certificateHateoas, @Qualifier("certificateOperationResponseHateoas")
+                                             Hateoas<OperationResponse> responseHateoas) {
+        this.certificateService = certificateService;
+        this.orderService = orderService;
         this.certificateHateoas = certificateHateoas;
         this.responseHateoas = responseHateoas;
     }
 
     @GetMapping("/all")
     public List<GiftCertificate> findAllGiftCertificates(@RequestParam int page, @RequestParam int elements) {
-        List<GiftCertificate> giftCertificates = service.findAll(page, elements);
+        List<GiftCertificate> giftCertificates = certificateService.findAll(page, elements);
         giftCertificates.forEach(certificateHateoas::createHateoas);
         return giftCertificates;
     }
@@ -49,7 +53,7 @@ public class GiftCertificateController {
                                                           @RequestParam(required = false) String certificateDescription,
                                                           @RequestParam(required = false) String sortByName,
                                                           @RequestParam(required = false) String sortByDate) {
-        List<GiftCertificate> giftCertificates = service.findCertificatesWithTagsByCriteria(page, elements, tagsNames,
+        List<GiftCertificate> giftCertificates = certificateService.findCertificatesWithTagsByCriteria(page, elements, tagsNames,
                 certificateName, certificateDescription, sortByName, sortByDate);
         giftCertificates.forEach(certificateHateoas::createHateoas);
         return giftCertificates;
@@ -58,21 +62,22 @@ public class GiftCertificateController {
     @PostMapping("/new")
     public OperationResponse createGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
         OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
-                ResponseAttribute.CERTIFICATE_CREATE_OPERATION, String.valueOf(service.insert(giftCertificate)));
+                ResponseAttribute.CERTIFICATE_CREATE_OPERATION, String.valueOf(certificateService.insert(giftCertificate)));
         responseHateoas.createHateoas(response);
         return response;
     }
 
     @GetMapping("/{id}")
     public GiftCertificate findCertificateById(@PathVariable String id) {
-        GiftCertificate giftCertificate = service.findById(id);
+        GiftCertificate giftCertificate = certificateService.findById(id);
         certificateHateoas.createHateoas(giftCertificate);
         return giftCertificate;
     }
 
     @DeleteMapping("/{id}")
     public OperationResponse deleteGiftCertificate(@PathVariable String id) {
-        service.delete(id);
+        orderService.deleteByCertificateId(id);
+        certificateService.delete(id);
         OperationResponse response = new OperationResponse(OperationResponse.Operation.DELETION,
                 ResponseAttribute.CERTIFICATE_DELETE_OPERATION, id);
         responseHateoas.createHateoas(response);
@@ -82,7 +87,7 @@ public class GiftCertificateController {
     @PatchMapping("/{id}")
     public OperationResponse updateGiftCertificate(@PathVariable String id,
                                                    @RequestBody GiftCertificate giftCertificate) {
-        service.update(id, giftCertificate);
+        certificateService.update(id, giftCertificate);
         OperationResponse response = new OperationResponse(OperationResponse.Operation.UPDATE,
                 ResponseAttribute.CERTIFICATE_UPDATE_OPERATION, id);
         responseHateoas.createHateoas(response);

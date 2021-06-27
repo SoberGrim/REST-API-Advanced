@@ -5,7 +5,6 @@ import com.epam.esm.dao.constant.EntityFieldsName;
 import com.epam.esm.dao.creator.QueryCreator;
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
-import com.epam.esm.dto.Tag;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

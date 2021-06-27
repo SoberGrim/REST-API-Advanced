@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -44,6 +45,34 @@ public class OrderDaoImpl implements OrderDao<Order> {
         criteria.where(builder.equal(root.get(EntityFieldsName.USER), user));
         List<Order> orders = (page > 0 && elements > 0) ? em.createQuery(criteria).setMaxResults(elements)
                 .setFirstResult(elements * (page - 1)).getResultList() : em.createQuery(criteria).getResultList();
+        em.close();
+        return orders;
+    }
+
+    @Override
+    public boolean deleteByCertificateId(long certificateId) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Order> criteria = builder.createCriteriaDelete(Order.class);
+        Root<Order> root = criteria.from(Order.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.GIFT_CERTIFICATE).get(EntityFieldsName.ID),
+                certificateId));
+        em.getTransaction().begin();
+        boolean result = em.createQuery(criteria).executeUpdate() > 0;
+        em.getTransaction().commit();
+        em.close();
+        return result;
+    }
+
+    @Override
+    public List<Order> findByCertificateId(long certificateId) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Order> criteria = builder.createQuery(Order.class);
+        Root<Order> root = criteria.from(Order.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.GIFT_CERTIFICATE).get(EntityFieldsName.ID),
+                certificateId));
+        List<Order> orders = em.createQuery(criteria).getResultList();
         em.close();
         return orders;
     }

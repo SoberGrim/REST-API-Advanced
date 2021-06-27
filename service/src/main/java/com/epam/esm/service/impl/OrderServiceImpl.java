@@ -11,6 +11,7 @@ import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +66,16 @@ public class OrderServiceImpl implements OrderService<Order> {
         } catch (NumberFormatException e) {
             throw new InvalidFieldException(ErrorAttribute.ORDER_ERROR_CODE, ErrorAttribute.INVALID_ORDER_ID, id);
         }
+    }
+
+    @Override
+    public boolean deleteByCertificateId(String certificateId) {
+        GiftCertificate certificate = certificateService.findById(certificateId);
+        if (LocalDateTime.now().isAfter(certificate.getCreateDate().plusDays(certificate.getDuration())) ||
+                CollectionUtils.isEmpty(dao.findByCertificateId(certificate.getId()))) {
+            return dao.deleteByCertificateId(certificate.getId());
+        }
+        throw new RuntimeException("certificate is in use");//todo write exception
     }
 
     private Order createOrder(GiftCertificate certificate) {

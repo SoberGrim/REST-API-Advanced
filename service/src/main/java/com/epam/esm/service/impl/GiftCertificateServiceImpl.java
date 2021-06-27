@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.epam.esm.validator.GiftCertificateValidator.areGiftCertificateTagsValid;
@@ -74,17 +73,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     @Override
     public boolean delete(String id) {
         try {
-            Optional<GiftCertificate> giftCertificateOptional = dao.findById(Long.parseLong(id));
-            if (giftCertificateOptional.isPresent()) { // TODO: 6/24/2021 check if the certificate has been ordered by users
-                GiftCertificate giftCertificate = giftCertificateOptional.get();
-                if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
-                    dao.disconnectAllTags(giftCertificate);
-                }
-                return dao.delete(giftCertificate.getId());
-            } else {
-                throw new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
-                        ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id);
+            GiftCertificate giftCertificate = dao.findById(Long.parseLong(id)).orElseThrow(() ->
+                    new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
+                            ErrorAttribute.RESOURCE_NOT_FOUND_ERROR, id));
+            // TODO: 6/24/2021 check if the certificate has been ordered by users
+            if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
+                dao.disconnectAllTags(giftCertificate);
             }
+            return dao.delete(giftCertificate.getId());
         } catch (NumberFormatException e) {
             throw new InvalidFieldException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
                     ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
@@ -92,7 +88,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
     }
 
     @Override
-    public boolean update(String id, GiftCertificate newCertificate) { // TODO: 6/24/2021 Maybe change function returning value (gift certificate)
+    public boolean update(String id, GiftCertificate newCertificate) {
         try {
             GiftCertificate oldCertificate = dao.findById(Long.parseLong(id)).orElseThrow(() ->
                     new ResourceNotFoundException(ErrorAttribute.GIFT_CERTIFICATE_ERROR_CODE,
@@ -115,11 +111,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService<GiftCe
                     ErrorAttribute.INVALID_GIFT_CERTIFICATE_ID_ERROR, id);
         }
         return true;
-    }
-
-    @Override
-    public boolean disconnectTags(String id) {
-        return false;
     }
 
     @Override
