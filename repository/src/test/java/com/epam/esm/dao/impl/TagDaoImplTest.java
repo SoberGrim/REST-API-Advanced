@@ -1,25 +1,34 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.config.DataSourceConfig;
+import com.epam.esm.config.EntityManagerFactoryConfiguration;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {TagDaoImpl.class, EntityManagerFactoryConfiguration.class}, loader = AnnotationConfigContextLoader.class)
+@SpringBootTest
 public class TagDaoImplTest {
-   // private static final TagDao<Tag> dao;
-// FIXME: 6/18/2021 fix test
-    /*@Test
+    
+    @Autowired
+    private TagDao<Tag> dao;
+
+    @Test
     public void findByNameTest() {
-        Optional<Tag> expected = Optional.of(new Tag("#warm"));
-        Optional<Tag> actual = dao.findByName("#warm");
+        Optional<Tag> expected = Optional.of(new Tag("#funny"));
+        Optional<Tag> actual = dao.findByName("#funny");
         assertEquals(expected, actual);
     }
 
@@ -31,17 +40,15 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void findTagsConnectedToCertificateTest() {
-        List<Tag> actual = new ArrayList<>();
-        actual.add(new Tag(1, "#funny"));
-        actual.add(new Tag(2, "#cool"));
-        List<Tag> expected = dao.findTagsConnectedToCertificate(1);
+    public void insertTest() {
+        long expected = 6;
+        long actual = dao.insert(new Tag("#newtaginserttest"));
         assertEquals(expected, actual);
     }
 
     @Test
     public void deleteTest() {
-        boolean actual = dao.delete(12345);
-        assertFalse(actual);
-    }*/
+        boolean actual = dao.delete(6);
+        assertTrue(actual);
+    }
 }
