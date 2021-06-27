@@ -10,10 +10,18 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * The type Gift certificate hateoas.
+ */
 @Component
 public class GiftCertificateHateoas implements Hateoas<GiftCertificate> {
     private final Hateoas<Tag> tagHateoas;
 
+    /**
+     * Instantiates a new Gift certificate hateoas.
+     *
+     * @param tagHateoas the tag hateoas
+     */
     @Autowired
     public GiftCertificateHateoas(Hateoas<Tag> tagHateoas) {
         this.tagHateoas = tagHateoas;

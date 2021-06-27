@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * The type Tag controller.
+ */
 @RestController
 @RequestMapping("/tags")
 public class TagController {
@@ -28,6 +31,14 @@ public class TagController {
     private final Hateoas<Tag> tagHateoas;
     private final Hateoas<OperationResponse> responseHateoas;
 
+    /**
+     * Instantiates a new Tag controller.
+     *
+     * @param tagService         the tag service
+     * @param tagHateoas         the tag hateoas
+     * @param certificateService the certificate service
+     * @param responseHateoas    the response hateoas
+     */
     @Autowired
     public TagController(TagService<Tag> tagService, Hateoas<Tag> tagHateoas, GiftCertificateService<GiftCertificate>
             certificateService, @Qualifier("tagOperationResponseHateoas") Hateoas<OperationResponse> responseHateoas) {
@@ -37,6 +48,13 @@ public class TagController {
         this.responseHateoas = responseHateoas;
     }
 
+    /**
+     * Find all tags list.
+     *
+     * @param page     the page
+     * @param elements the elements
+     * @return the list
+     */
     @GetMapping
     public List<Tag> findAllTags(@RequestParam int page, @RequestParam int elements) {
         List<Tag> tags = tagService.findAll(page, elements);
@@ -44,6 +62,12 @@ public class TagController {
         return tags;
     }
 
+    /**
+     * Find tag by id tag.
+     *
+     * @param id the id
+     * @return the tag
+     */
     @GetMapping("/{id}")
     public Tag findTagById(@PathVariable String id) {
         Tag tag = tagService.findById(id);
@@ -51,6 +75,12 @@ public class TagController {
         return tag;
     }
 
+    /**
+     * Delete tag operation response.
+     *
+     * @param id the id
+     * @return the operation response
+     */
     @DeleteMapping("/{id}")
     public OperationResponse deleteTag(@PathVariable String id) {
         certificateService.disconnectTagById(id);
@@ -61,6 +91,12 @@ public class TagController {
         return response;
     }
 
+    /**
+     * Create tag operation response.
+     *
+     * @param tag the tag
+     * @return the operation response
+     */
     @PostMapping("/new")
     public OperationResponse createTag(@RequestBody Tag tag) {
         OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,

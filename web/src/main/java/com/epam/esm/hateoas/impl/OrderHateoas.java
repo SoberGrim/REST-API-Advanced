@@ -11,11 +11,20 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * The type Order hateoas.
+ */
 @Component
 public class OrderHateoas implements Hateoas<Order> {
     private final Hateoas<GiftCertificate> certificateHateoas;
     private final Hateoas<User> userHateoas;
 
+    /**
+     * Instantiates a new Order hateoas.
+     *
+     * @param certificateHateoas the certificate hateoas
+     * @param userHateoas        the user hateoas
+     */
     @Autowired
     public OrderHateoas(Hateoas<GiftCertificate> certificateHateoas, Hateoas<User> userHateoas) {
         this.certificateHateoas = certificateHateoas;

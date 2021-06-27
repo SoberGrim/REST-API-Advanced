@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * The type Order operation response hateoas.
+ */
 @Component
 public class OrderOperationResponseHateoas implements Hateoas<OperationResponse> {
     @Override

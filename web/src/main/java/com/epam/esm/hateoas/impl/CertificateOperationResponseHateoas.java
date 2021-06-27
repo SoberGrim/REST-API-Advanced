@@ -11,6 +11,9 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * The type Certificate operation response hateoas.
+ */
 @Component
 public class CertificateOperationResponseHateoas implements Hateoas<OperationResponse> {
     private static final List<OperationResponse.Operation> operations = new ArrayList<>();

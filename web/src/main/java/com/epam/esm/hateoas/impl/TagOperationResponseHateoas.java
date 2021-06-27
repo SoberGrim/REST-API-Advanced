@@ -11,6 +11,9 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+/**
+ * The type Tag operation response hateoas.
+ */
 @Component
 public class TagOperationResponseHateoas implements Hateoas<OperationResponse> {
     private static final List<OperationResponse.Operation> operations = new ArrayList<>();
