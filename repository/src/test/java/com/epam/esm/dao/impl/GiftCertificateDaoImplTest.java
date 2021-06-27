@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DirtiesContext
-@ContextConfiguration(classes = {GiftCertificateDaoImpl.class, TagDaoImpl.class, GiftCertificateQueryCreator.class,
+@ContextConfiguration(classes = {GiftCertificateDaoImpl.class, GiftCertificateQueryCreator.class,
         EntityManagerFactoryConfiguration.class}, loader = AnnotationConfigContextLoader.class)
 @SpringBootTest
 public class GiftCertificateDaoImplTest {
