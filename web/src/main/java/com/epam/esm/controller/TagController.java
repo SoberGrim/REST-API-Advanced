@@ -1,16 +1,21 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.attribute.ResponseAttribute;
+import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Tag;
+import com.epam.esm.hateoas.Hateoas;
+import com.epam.esm.response.OperationResponse;
+import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,26 +26,40 @@ import java.util.List;
 @RestController
 @RequestMapping("/tags")
 public class TagController {
-    private final TagService<Tag> service;
+    private final TagService<Tag> tagService;
+    private final GiftCertificateService<GiftCertificate> certificateService;
+    private final Hateoas<Tag> tagHateoas;
+    private final Hateoas<OperationResponse> responseHateoas;
 
     /**
      * Instantiates a new Tag controller.
      *
-     * @param service the service
+     * @param tagService         the tag service
+     * @param tagHateoas         the tag hateoas
+     * @param certificateService the certificate service
+     * @param responseHateoas    the response hateoas
      */
     @Autowired
-    public TagController(TagService<Tag> service) {
-        this.service = service;
+    public TagController(TagService<Tag> tagService, Hateoas<Tag> tagHateoas, GiftCertificateService<GiftCertificate>
+            certificateService, @Qualifier("tagOperationResponseHateoas") Hateoas<OperationResponse> responseHateoas) {
+        this.tagService = tagService;
+        this.certificateService = certificateService;
+        this.tagHateoas = tagHateoas;
+        this.responseHateoas = responseHateoas;
     }
 
     /**
      * Find all tags list.
      *
+     * @param page     the page
+     * @param elements the elements
      * @return the list
      */
     @GetMapping
-    public List<Tag> findAllTags() {
-        return service.findAll();
+    public List<Tag> findAllTags(@RequestParam int page, @RequestParam int elements) {
+        List<Tag> tags = tagService.findAll(page, elements);
+        tags.forEach(tagHateoas::createHateoas);
+        return tags;
     }
 
     /**
@@ -51,32 +70,38 @@ public class TagController {
      */
     @GetMapping("/{id}")
     public Tag findTagById(@PathVariable String id) {
-        return service.findById(id);
+        Tag tag = tagService.findById(id);
+        tagHateoas.createHateoas(tag);
+        return tag;
     }
 
     /**
-     * Delete tag response entity.
+     * Delete tag operation response.
      *
      * @param id the id
-     * @return the response entity
+     * @return the operation response
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTag(@PathVariable String id) {
-        service.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Tag deleted successfully" +
-                " (id = " + id + ")");
+    public OperationResponse deleteTag(@PathVariable String id) {
+        certificateService.disconnectTagById(id);
+        tagService.delete(id);
+        OperationResponse response = new OperationResponse(OperationResponse.Operation.DELETION,
+                ResponseAttribute.TAG_DELETE_OPERATION, id);
+        responseHateoas.createHateoas(response);
+        return response;
     }
 
     /**
-     * Create tag response entity.
+     * Create tag operation response.
      *
      * @param tag the tag
-     * @return the response entity
+     * @return the operation response
      */
     @PostMapping("/new")
-    public ResponseEntity<String> createTag(@RequestBody Tag tag) {
-        service.insert(tag);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Tag created" +
-                " successfully");
+    public OperationResponse createTag(@RequestBody Tag tag) {
+        OperationResponse response = new OperationResponse(OperationResponse.Operation.CREATION,
+                ResponseAttribute.TAG_CREATE_OPERATION, String.valueOf(tagService.insert(tag)));
+        responseHateoas.createHateoas(response);
+        return response;
     }
 }

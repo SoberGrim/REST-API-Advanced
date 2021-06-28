@@ -11,12 +11,12 @@ import java.util.List;
  */
 public interface GiftCertificateService<T extends GiftCertificate> {
     /**
-     * Insert boolean.
+     * Insert long.
      *
      * @param t the t
-     * @return the boolean
+     * @return the long
      */
-    boolean insert(T t);
+    long insert(T t);
 
     /**
      * Delete boolean.
@@ -36,6 +36,13 @@ public interface GiftCertificateService<T extends GiftCertificate> {
     boolean update(String id, GiftCertificate giftCertificate);
 
     /**
+     * Disconnect tag by id.
+     *
+     * @param tagId the tag id
+     */
+    void disconnectTagById(String tagId);
+
+    /**
      * Find by id t.
      *
      * @param id the id
@@ -46,21 +53,25 @@ public interface GiftCertificateService<T extends GiftCertificate> {
     /**
      * Find all list.
      *
+     * @param page     the page
+     * @param elements the elements
      * @return the list
      */
-    List<GiftCertificate> findAll();
+    List<GiftCertificate> findAll(int page, int elements);
 
     /**
      * Find certificates with tags by criteria list.
      *
-     * @param tagName                the tag name
+     * @param page                   the page
+     * @param elements               the elements
+     * @param tagsNames              the tags names
      * @param certificateName        the certificate name
      * @param certificateDescription the certificate description
      * @param sortByName             the sort by name
      * @param sortByDate             the sort by date
      * @return the list
      */
-    List<GiftCertificate> findCertificatesWithTagsByCriteria(String tagName, String certificateName,
-                                                             String certificateDescription, String sortByName,
-                                                             String sortByDate);
+    List<GiftCertificate> findCertificatesWithTagsByCriteria(int page, int elements, List<String> tagsNames,
+                                                             String certificateName, String certificateDescription,
+                                                             String sortByName, String sortByDate);
 }

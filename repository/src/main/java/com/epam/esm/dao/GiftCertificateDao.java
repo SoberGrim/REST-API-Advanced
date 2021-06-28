@@ -2,7 +2,6 @@ package com.epam.esm.dao;
 
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
-import com.epam.esm.dto.Tag;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +13,12 @@ import java.util.Optional;
  */
 public interface GiftCertificateDao<T extends GiftCertificate> {
     /**
-     * Insert boolean.
+     * Insert long.
      *
      * @param t the t
-     * @return the boolean
+     * @return the long
      */
-    boolean insert(T t);
+    long insert(T t);
 
     /**
      * Delete boolean.
@@ -32,10 +31,10 @@ public interface GiftCertificateDao<T extends GiftCertificate> {
     /**
      * Disconnect all tags boolean.
      *
-     * @param id the id
+     * @param giftCertificate the gift certificate
      * @return the boolean
      */
-    boolean disconnectAllTags(long id);
+    boolean disconnectAllTags(GiftCertificate giftCertificate);
 
     /**
      * Update boolean.
@@ -56,24 +55,19 @@ public interface GiftCertificateDao<T extends GiftCertificate> {
     /**
      * Find all list.
      *
+     * @param page     the page
+     * @param elements the elements
      * @return the list
      */
-    List<T> findAll();
+    List<T> findAll(int page, int elements);
 
     /**
      * Find with tags list.
      *
-     * @param criteriaList the criteria list
+     * @param page                    the page
+     * @param elements                the elements
+     * @param certificateCriteriaList the certificate criteria list
      * @return the list
      */
-    List<T> findWithTags(List<Criteria> criteriaList);
-
-    /**
-     * Connect tags boolean.
-     *
-     * @param tags          the tags
-     * @param certificateId the certificate id
-     * @return the boolean
-     */
-    boolean connectTags(List<Tag> tags, long certificateId);
+    List<T> findWithTags(int page, int elements, List<Criteria<GiftCertificate>> certificateCriteriaList);
 }

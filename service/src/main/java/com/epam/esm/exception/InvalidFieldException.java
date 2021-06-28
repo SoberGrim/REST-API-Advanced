@@ -1,21 +1,29 @@
 package com.epam.esm.exception;
 
+import com.epam.esm.dao.constant.ErrorAttribute;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * The type Invalid field exception.
  */
 public class InvalidFieldException extends RuntimeException {
     private String errorCode;
-    private String message;
+    private String messageKey;
+    private String detail;
 
     /**
      * Instantiates a new Invalid field exception.
      *
-     * @param errorCode the error code
-     * @param message   the message
+     * @param errorCode  the error code
+     * @param messageKey the message key
+     * @param detail     the detail
      */
-    public InvalidFieldException(String errorCode, String message) {
+    public InvalidFieldException(String errorCode, String messageKey, String detail) {
         this.errorCode = errorCode;
-        this.message = message;
+        this.messageKey = messageKey;
+        this.detail = detail;
     }
 
     /**
@@ -36,17 +44,49 @@ public class InvalidFieldException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    @Override
-    public String getMessage() {
-        return message;
+    /**
+     * Gets message key.
+     *
+     * @return the message key
+     */
+    public String getMessageKey() {
+        return messageKey;
     }
 
     /**
-     * Sets message.
+     * Sets message key.
      *
-     * @param message the message
+     * @param messageKey the message key
      */
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+    /**
+     * Gets detail.
+     *
+     * @return the detail
+     */
+    public String getDetail() {
+        return detail;
+    }
+
+    /**
+     * Sets detail.
+     *
+     * @param detail the detail
+     */
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    /**
+     * Gets localized message.
+     *
+     * @param locale the locale
+     * @return the localized message
+     */
+    public String getLocalizedMessage(Locale locale) {
+        return ResourceBundle.getBundle(ErrorAttribute.PROPERTY_FILE_NAME, locale).getString(messageKey);
     }
 }

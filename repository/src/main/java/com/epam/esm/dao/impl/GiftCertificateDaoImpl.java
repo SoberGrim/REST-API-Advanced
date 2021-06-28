@@ -1,23 +1,21 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.GiftCertificateDao;
-import com.epam.esm.dao.constant.SqlGiftCertificateQuery;
-import com.epam.esm.dao.creator.SqlQueryCreator;
+import com.epam.esm.dao.constant.EntityFieldsName;
+import com.epam.esm.dao.creator.QueryCreator;
 import com.epam.esm.dao.creator.criteria.Criteria;
 import com.epam.esm.dto.GiftCertificate;
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dto.Tag;
-import com.epam.esm.exception.DaoException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,87 +24,103 @@ import java.util.Optional;
  */
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao<GiftCertificate> {
-    private final JdbcTemplate template;
-    private final GiftCertificateMapper mapper;
-    private final SqlQueryCreator queryCreator;
+    private final QueryCreator<GiftCertificate> criteriaCreator;
+    private final EntityManagerFactory factory;
 
     /**
      * Instantiates a new Gift certificate dao.
      *
-     * @param dataSource   the data source
-     * @param mapper       the mapper
-     * @param queryCreator the query creator
+     * @param criteriaCreator the criteria creator
+     * @param factory         the factory
      */
     @Autowired
-    public GiftCertificateDaoImpl(DataSource dataSource, GiftCertificateMapper mapper, SqlQueryCreator queryCreator) {
-        this.template = new JdbcTemplate(dataSource);
-        this.mapper = mapper;
-        this.queryCreator = queryCreator;
+    public GiftCertificateDaoImpl(QueryCreator<GiftCertificate> criteriaCreator, EntityManagerFactory factory) {
+        this.criteriaCreator = criteriaCreator;
+        this.factory = factory;
     }
 
     @Override
-    public boolean insert(GiftCertificate giftCertificate) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        boolean isQuerySuccess = template.update(con -> {
-            PreparedStatement ps = con.prepareStatement(SqlGiftCertificateQuery.SQL_INSERT_CERTIFICATE,
-                    Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, giftCertificate.getName());
-            ps.setString(2, giftCertificate.getDescription());
-            ps.setBigDecimal(3, giftCertificate.getPrice());
-            ps.setInt(4, giftCertificate.getDuration());
-            ps.setTimestamp(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
-            return ps;
-        }, keyHolder) == 1;
-        if (isQuerySuccess && keyHolder.getKey() != null) {
-            return (giftCertificate.getTags() == null || giftCertificate.getTags().isEmpty() ||
-                    connectTags(giftCertificate.getTags(), keyHolder.getKey().longValue()));
-        } else {
-            throw new DaoException("1", "Generated key is null for gift certificate: " + giftCertificate);
-        }
+    public long insert(GiftCertificate giftCertificate) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return giftCertificate.getId();
     }
 
     @Override
     public boolean delete(long id) {
-        return template.update(SqlGiftCertificateQuery.SQL_DELETE_CERTIFICATE_BY_ID, id) == 1;
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<GiftCertificate> criteria = builder.createCriteriaDelete(GiftCertificate.class);
+        Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.ID), id));
+        em.getTransaction().begin();
+        boolean result = em.createQuery(criteria).executeUpdate() == 1;
+        em.getTransaction().commit();
+        em.close();
+        return result;
     }
 
     @Override
-    public boolean disconnectAllTags(long id) {
-        return template.update(SqlGiftCertificateQuery.SQL_DELETE_TAGS_FROM_CERTIFICATE_BY_CERTIFICATE_ID, id) == 1;
+    public boolean disconnectAllTags(GiftCertificate giftCertificate) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        giftCertificate.setTags(null);
+        em.merge(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return CollectionUtils.isEmpty(giftCertificate.getTags());
     }
 
     @Override
     public boolean update(GiftCertificate giftCertificate) {
-        return template.update(SqlGiftCertificateQuery.SQL_UPDATE_CERTIFICATE_BY_ID, giftCertificate.getName(),
-                giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration(),
-                giftCertificate.getLastUpdateDate(), giftCertificate.getId()) == 1;
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.merge(giftCertificate);
+        em.getTransaction().commit();
+        em.close();
+        return true;
     }
 
     @Override
     public Optional<GiftCertificate> findById(long id) {
-        List<GiftCertificate> giftCertificates = template.query(SqlGiftCertificateQuery.SQL_SELECT_CERTIFICATE_BY_ID,
-                mapper, id);
-        Optional<GiftCertificate> giftCertificate = Optional.empty();
-        if (giftCertificates != null && !giftCertificates.isEmpty()) {
-            giftCertificate = Optional.of(giftCertificates.get(0));
-        }
+        EntityManager em = factory.createEntityManager();
+        Optional<GiftCertificate> giftCertificate = Optional.ofNullable(em.find(GiftCertificate.class, id));
+        em.close();
         return giftCertificate;
     }
 
     @Override
-    public List<GiftCertificate> findAll() {
-        return template.query(SqlGiftCertificateQuery.SQL_SELECT_ALL_CERTIFICATES, mapper);
+    public List<GiftCertificate> findAll(int page, int elements) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteria = builder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
+        criteria.select(root);
+
+        List<GiftCertificate> giftCertificates = (page > 0 && elements > 0) ? em.createQuery(criteria)
+                .setMaxResults(elements).setFirstResult(elements * (page - 1)).getResultList() :
+                em.createQuery(criteria).getResultList();
+
+        em.close();
+        return giftCertificates;
     }
 
     @Override
-    public List<GiftCertificate> findWithTags(List<Criteria> criteriaList) {
-        return template.query(queryCreator.createQuery(criteriaList), mapper);
-    }
+    public List<GiftCertificate> findWithTags(int page, int elements, List<Criteria<GiftCertificate>> certificateCriteriaList) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteria = builder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteria.from(GiftCertificate.class);
 
-    @Override
-    public boolean connectTags(List<Tag> tags, long certificateId) {
-        return tags.stream()
-                .allMatch(t -> template.update(SqlGiftCertificateQuery.SQL_UPDATE_CERTIFICATE_TAG,
-                        certificateId, t.getId()) == 1);
+        criteriaCreator.createCriteria(certificateCriteriaList, criteria, builder, root);
+
+        List<GiftCertificate> giftCertificates = (page > 0 && elements > 0) ? em.createQuery(criteria)
+                .setMaxResults(elements).setFirstResult(elements * (page - 1)).getResultList() :
+                em.createQuery(criteria).getResultList();
+        em.close();
+        return giftCertificates;
     }
 }

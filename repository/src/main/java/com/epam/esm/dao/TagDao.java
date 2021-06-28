@@ -12,12 +12,12 @@ import java.util.Optional;
  */
 public interface TagDao<T extends Tag> {
     /**
-     * Insert boolean.
+     * Insert long.
      *
      * @param t the t
-     * @return the boolean
+     * @return the long
      */
-    boolean insert(T t);
+    long insert(T t);
 
     /**
      * Find by id optional.
@@ -36,19 +36,21 @@ public interface TagDao<T extends Tag> {
     Optional<T> findByName(String name);
 
     /**
-     * Find all list.
+     * Find most used tag of user with highest cost of all orders optional.
      *
-     * @return the list
+     * @param userId the user id
+     * @return the optional
      */
-    List<T> findAll();
+    Optional<T> findMostUsedTagOfUserWithHighestCostOfAllOrders(long userId);
 
     /**
-     * Find tags connected to certificate list.
+     * Find all list.
      *
-     * @param id the id
+     * @param page     the page
+     * @param elements the elements
      * @return the list
      */
-    List<T> findTagsConnectedToCertificate(long id);
+    List<T> findAll(int page, int elements);
 
     /**
      * Delete boolean.

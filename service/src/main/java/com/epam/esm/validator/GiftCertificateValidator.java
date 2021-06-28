@@ -4,7 +4,7 @@ import com.epam.esm.dto.GiftCertificate;
 import com.epam.esm.dto.Tag;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -76,7 +76,7 @@ public class GiftCertificateValidator {
      * @param tags the tags
      * @return the boolean
      */
-    public static boolean areGiftCertificateTagsValidForCreation(List<Tag> tags) {
+    public static boolean areGiftCertificateTagsValidForCreation(Set<Tag> tags) {
         if (tags == null || tags.isEmpty()) {
             return true;
         }
@@ -90,7 +90,7 @@ public class GiftCertificateValidator {
      * @param tags the tags
      * @return the boolean
      */
-    public static boolean areGiftCertificateTagsValid(List<Tag> tags) {
+    public static boolean areGiftCertificateTagsValid(Set<Tag> tags) {
         if (tags == null || tags.isEmpty()) {
             return false;
         }

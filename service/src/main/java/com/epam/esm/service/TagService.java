@@ -11,12 +11,12 @@ import java.util.List;
  */
 public interface TagService<T extends Tag> {
     /**
-     * Insert boolean.
+     * Insert long.
      *
      * @param tag the tag
-     * @return the boolean
+     * @return the long
      */
-    boolean insert(Tag tag);
+    long insert(Tag tag);
 
     /**
      * Find by id t.
@@ -35,19 +35,21 @@ public interface TagService<T extends Tag> {
     T findByName(String name);
 
     /**
-     * Find all list.
+     * Find most used tag of user with highest cost of all orders t.
      *
-     * @return the list
+     * @param userId the user id
+     * @return the t
      */
-    List<T> findAll();
+    T findMostUsedTagOfUserWithHighestCostOfAllOrders(String userId);
 
     /**
-     * Find tags connected to certificate list.
+     * Find all list.
      *
-     * @param certificateId the certificate id
+     * @param page     the page
+     * @param elements the elements
      * @return the list
      */
-    List<T> findTagsConnectedToCertificate(String certificateId);
+    List<T> findAll(int page, int elements);
 
     /**
      * Delete boolean.

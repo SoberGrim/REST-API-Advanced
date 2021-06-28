@@ -1,14 +1,19 @@
 package com.epam.esm.dao.impl;
 
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.dao.constant.SqlTagQuery;
-import com.epam.esm.dao.mapper.TagMapper;
+import com.epam.esm.dao.constant.EntityFieldsName;
+import com.epam.esm.dto.Order;
 import com.epam.esm.dto.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,49 +22,92 @@ import java.util.Optional;
  */
 @Repository
 public class TagDaoImpl implements TagDao<Tag> {
-    private final JdbcTemplate template;
-    private final TagMapper mapper;
+    private final EntityManagerFactory factory;
 
     /**
      * Instantiates a new Tag dao.
      *
-     * @param dataSource the data source
-     * @param mapper     the mapper
+     * @param factory the factory
      */
     @Autowired
-    public TagDaoImpl(DataSource dataSource, TagMapper mapper) {
-        this.template = new JdbcTemplate(dataSource);
-        this.mapper = mapper;
+    public TagDaoImpl(EntityManagerFactory factory) {
+        this.factory = factory;
     }
 
     @Override
-    public boolean insert(Tag tag) {
-        return template.update(SqlTagQuery.SQL_INSERT_TAG, tag.getName()) == 1;
+    public long insert(Tag tag) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(tag);
+        em.getTransaction().commit();
+        em.close();
+        return tag.getId();
     }
 
     @Override
     public Optional<Tag> findById(long id) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAG_BY_ID, mapper, new Object[]{id}).stream()
-                .findAny();
+        EntityManager em = factory.createEntityManager();
+        Optional<Tag> tag = Optional.ofNullable(em.find(Tag.class, id));
+        em.close();
+        return tag;
     }
 
     @Override
     public Optional<Tag> findByName(String name) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAG_BY_NAME, mapper, new Object[]{name}).stream().findAny();
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.NAME), name));
+        Optional<Tag> tag = em.createQuery(criteria).getResultStream().findAny();
+        em.close();
+        return tag;
     }
 
     @Override
-    public List<Tag> findAll() {
-        return template.query(SqlTagQuery.SQL_SELECT_ALL_TAGS, mapper);
+    public Optional<Tag> findMostUsedTagOfUserWithHighestCostOfAllOrders(long userId) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Order> root = criteria.from(Order.class);
+
+        Join<Tag, Order> tagOrderJoin = root.join(EntityFieldsName.GIFT_CERTIFICATE)
+                .join(EntityFieldsName.TAGS);
+
+        criteria.select(root.get(EntityFieldsName.GIFT_CERTIFICATE).get(EntityFieldsName.TAGS))
+                .where(builder.equal(root.get(EntityFieldsName.USER).get(EntityFieldsName.ID), userId))
+                .groupBy(tagOrderJoin.get(EntityFieldsName.NAME))
+                .orderBy(builder.desc(builder.count(tagOrderJoin.get(EntityFieldsName.NAME))),
+                        builder.desc(builder.sum(root.get(EntityFieldsName.PRICE))));
+
+        Optional<Tag> tag = em.createQuery(criteria).getResultStream().findFirst();
+        em.close();
+        return tag;
     }
 
     @Override
-    public List<Tag> findTagsConnectedToCertificate(long id) {
-        return template.query(SqlTagQuery.SQL_SELECT_TAGS_CONNECTED_WITH_CERTIFICATE, mapper, id);
+    public List<Tag> findAll(int page, int elements) {
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteria = builder.createQuery(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.select(root);
+        List<Tag> tags = (page > 0 && elements > 0) ? em.createQuery(criteria).setMaxResults(elements)
+                .setFirstResult(elements * (page - 1)).getResultList() : em.createQuery(criteria).getResultList();
+        em.close();
+        return tags;
     }
 
     @Override
     public boolean delete(long id) {
-        return template.update(SqlTagQuery.SQL_DELETE_TAG_BY_ID, id) == 1;
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaDelete<Tag> criteria = builder.createCriteriaDelete(Tag.class);
+        Root<Tag> root = criteria.from(Tag.class);
+        criteria.where(builder.equal(root.get(EntityFieldsName.ID), id));
+        em.getTransaction().begin();
+        boolean result = em.createQuery(criteria).executeUpdate() == 1;
+        em.getTransaction().commit();
+        return result;
     }
 }
