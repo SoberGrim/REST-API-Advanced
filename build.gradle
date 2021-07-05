@@ -1,0 +1,24 @@
+subprojects {
+    apply plugin: 'java'
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    repositories {
+        mavenCentral()
+    }
+
+    group 'com.epam.ems'
+    version '1.0'
+
+    dependencies {
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.1'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.1'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.5.1'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
